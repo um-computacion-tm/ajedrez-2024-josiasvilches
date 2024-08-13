@@ -41,7 +41,7 @@ checks:
     config:
       threshold: #language-specific defaults. overrides affect all languages
   
-exclude_patterns_
+exclude_patterns:
 - "config/"
 - "db/"
 - "dist/"
