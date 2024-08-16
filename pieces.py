@@ -7,3 +7,10 @@ class Pawn(Piece):
 
 class Rook(Piece):
     ...
+
+
+class Horse(Piece):
+    ...
+
+class Bishop(Piece):
+    ...
