@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.04] - 19 / 08 / 2024
+Se creó una parte de la lógica del archivo 'pawn' y se mejoró la lógica de la clase Pieces, y se armó un testeo para board
+
 ## [0.03] - 16 / 08 / 2024
 Se añadieron las fichas de los alfiles y los caballos
 
