@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.05] - 20 / 08 / 2024
+Se rearmó el entorno virtual y se pueden ejecutar los testeos estando en carpetas distintas
+
 ## [0.04] - 19 / 08 / 2024
 Se creó una parte de la lógica del archivo 'pawn' y se mejoró la lógica de la clase Pieces, y se armó un testeo para board
 
