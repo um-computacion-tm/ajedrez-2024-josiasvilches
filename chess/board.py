@@ -1,4 +1,4 @@
-from pieces import Rook, Knight, Bishop
+from chess.pieces import Rook, Knight, Bishop
 
 class Board:
     def __init__(self):
