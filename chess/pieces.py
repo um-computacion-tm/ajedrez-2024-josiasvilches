@@ -18,16 +18,3 @@ class Piece:
 
     def get_nombre(self):
         return self.__nombre__
-
-class Rook(Piece):
-    def __init__(self, color, fila=None, columna=None):
-        super().__init__(color, 'Rook', fila, columna)
-
-
-class Knight(Piece):
-    def __init__(self, color, fila=None, columna=None):
-        super().__init__(color, 'Knight', fila, columna)
-
-class Bishop(Piece):
-    def __init__(self, color, fila=None, columna=None):
-        super().__init__(color, 'Bishop', fila, columna)
