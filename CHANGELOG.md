@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.09] - 27 / 08 / 2024
+Se agregaron las piezas faltantes al tablero y se arrancó con la lógica de la Torre (ROOK)
+
 ## [0.08] - 26 / 08 / 2024
 Armado de archivos de cada ficha
 
