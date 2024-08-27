@@ -1,4 +1,9 @@
-from chess.pieces import Rook, Knight, Bishop
+from chess.king import *
+from chess.queen import *
+from chess.bishop import *
+from chess.rook import *
+from chess.knight import *
+from chess.pawn import *
 
 class Board:
     def __init__(self):
@@ -26,6 +31,20 @@ class Board:
         self.__positions__[0][5] = Bishop("Black", 0, 5)
         self.__positions__[7][2] = Bishop("White", 7, 2)
         self.__positions__[7][5] = Bishop("White", 7, 5)
+
+        # Posiciones iniciales de la reina
+        self.__positions__[0][3] = Queen("Black", 0, 3)
+        self.__positions__[7][3] = Queen("White", 7, 3)
+
+        # Posiciones iniciales del rey
+        self.__positions__[0][4] = King("Black", 0, 4)
+        self.__positions__[7][4] = King("White", 7, 4)
+
+        # Posiciones iniciales de los peones
+        for i in range(8):
+            self.__positions__[1][i] = Pawn("Black", 1, i)
+            self.__positions__[6][i] = Pawn("White", 6, i)
+
 
     def get_piece(self, row, col):
         return self.__positions__[row][col]

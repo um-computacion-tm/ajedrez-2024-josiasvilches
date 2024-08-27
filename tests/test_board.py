@@ -1,6 +1,13 @@
 import unittest
 from chess.chess import Board
-from chess.pieces import Rook, Knight, Bishop
+from chess.king import *
+from chess.king import *
+from chess.queen import *
+# from chess.pawn import *
+from chess.rook import *
+from chess.knight import *
+from chess.bishop import *
+
 
 class TestBoard(unittest.TestCase):
     
@@ -36,6 +43,9 @@ class TestBoard(unittest.TestCase):
         self.assertEqual(self.board.get_piece(7, 2).get_color(), "White")
         self.assertIsInstance(self.board.get_piece(7, 5), Bishop)
         self.assertEqual(self.board.get_piece(7, 5).get_color(), "White")
+
+   # def test_initial_queen_position(self):
+         
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,7 @@
 [run]
-source = chess
+source = 
+    chess
+    tests
 omit =
     venv/*
     */tests/*
@@ -15,4 +17,4 @@ exclude_lines =
     if __name__ == "__main__":
     def suite
     __str__
-
+    main()
