@@ -9,3 +9,11 @@ class King(Piece):
     #         return 'K'
     #     else:
     #         return 'k'
+
+    def is_valid_move(self, end_fila, end_columna, board):
+        start_fila, start_columna = self.get_position()
+        if abs(start_fila - end_fila) <= 1 and abs(start_columna - end_columna) <= 1:
+            return True
+        return False
+    def move(self, end_fila, end_columna):
+        self.set_position(end_fila, end_columna)
