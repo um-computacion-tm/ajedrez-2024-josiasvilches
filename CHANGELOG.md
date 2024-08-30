@@ -1,6 +1,9 @@
 # Changelog
 
-## [0.010] - 27 / 08 / 2024
+## [0.011] - 29 / 08 / 2024
+Se agregó pequeña parte de la lógica del movimiento de knight
+
+## [0.010] - 28 / 08 / 2024
 Se agregó una pequeña lógica de movimiento a la ficha del REY
 
 ## [0.009] - 27 / 08 / 2024
