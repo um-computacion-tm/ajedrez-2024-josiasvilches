@@ -18,4 +18,16 @@ class Knight(Piece):
             return True
         return False
     
+    def __str__(self):
+        return super().__str__() + 'N'
+    
+    def __repr__(self):
+        return super().__repr__() + 'N'
+    
+    def __eq__(self, other):
+        return super().__eq__(other) and self.color == other.color and self.fila == other.fila and self.columna == other.columna            
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    
     

@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.012] - 29 / 08 / 2024
+Mejora en knight
+
 ## [0.011] - 29 / 08 / 2024
 Se agregó pequeña parte de la lógica del movimiento de knight
 
