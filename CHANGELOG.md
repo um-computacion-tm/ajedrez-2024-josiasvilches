@@ -1,6 +1,9 @@
 # Changelog
 
-## [0.012] - 29 / 08 / 2024
+## [0.013] - 03 / 09 / 2024
+Se agregó una pequeña parte de la lógica de la ficha de la reina
+
+## [0.012] - 02 / 09 / 2024
 Mejora en knight
 
 ## [0.011] - 29 / 08 / 2024
