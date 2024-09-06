@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.014] - 05 / 09 / 2024
+Mejora en lógica de reina
+
 ## [0.013] - 03 / 09 / 2024
 Se agregó una pequeña parte de la lógica de la ficha de la reina
 

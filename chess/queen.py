@@ -17,7 +17,17 @@ class Queen(Piece):
                     break
             else:
                 break
-            
+        for i in range(1, 8):
+            if self.fila - i >= 0:
+                if board[self.fila - i][self.columna] == None:
+                    moves.append((self.fila - i, self.columna))
+                elif board[self.fila - i][self.columna].color != self.color:
+                    moves.append((self.fila - i, self.columna))
+                    break
+                else:
+                    break
+            else:
+                break
     # def __str__(self):
     #     if self.__color__ == 'White':
     #         return 'Q'
