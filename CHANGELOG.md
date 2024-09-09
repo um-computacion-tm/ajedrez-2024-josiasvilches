@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.015] - 08 / 09 / 2024
+Lógica de movimiento a los caballos agregada
+
 ## [0.014] - 05 / 09 / 2024
 Mejora en lógica de reina
 
