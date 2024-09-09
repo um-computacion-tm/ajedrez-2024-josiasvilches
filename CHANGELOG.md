@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.016] - 09 / 09 / 2024
+Mejora del movimiento de caballos
+
 ## [0.015] - 08 / 09 / 2024
 Lógica de movimiento a los caballos agregada
 

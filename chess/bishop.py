@@ -9,3 +9,13 @@ class Bishop(Piece):
             return True
         return False
     
+    def move(self, fila, columna):
+        if self.is_valid(fila, columna):
+            self.fila = fila
+            self.columna = columna
+            return True
+        return False
+    
+    def __str__(self):
+        return super().__str__() + 'B'
+    
