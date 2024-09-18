@@ -46,9 +46,6 @@ class Board:
             self.__positions__[6][i] = Pawn("White", 6, i)
 
 
-    def get_board(self, row, col):
-        return self.__positions__[row][col]
-
     def get_piece(self, row, col):
         return self.__positions__[row][col]
     
