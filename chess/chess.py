@@ -1,4 +1,11 @@
 from chess.board import Board
+from chess.bishop import Bishop
+from chess.knight import Knight
+from chess.rook import Rook
+from chess.pawn import Pawn
+from chess.king import King
+from chess.queen import Queen
+
 class Chess:
     def __init__(self):
         self.__board__ = Board()

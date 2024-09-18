@@ -46,5 +46,33 @@ class Board:
             self.__positions__[6][i] = Pawn("White", 6, i)
 
 
+    def get_board(self, row, col):
+        return self.__positions__[row][col]
+
     def get_piece(self, row, col):
         return self.__positions__[row][col]
+    
+    def get_piece_color(self, row, col):
+        piece = self.get_piece(row, col)
+        if piece is not None:
+            return self.__positions__[row][col].get_color()
+        return None
+    
+    def is_valid_move(self, from_row, from_col, to_row, to_col):
+        piece = self.get_piece(from_row, from_col)
+        if piece is None:
+            return False
+        possible_moves = piece.get_possible_moves(from_row, from_col)
+        return (to_row, to_col) in possible_moves
+    
+    def move_piece(self, from_row, from_col, to_row, to_col):
+        piece = self.get_piece(from_row, from_col)
+        if piece is None:
+            return False
+        if self.is_valid_move(from_row, from_col, to_row, to_col):
+            self.__positions__[to_row][to_col] = piece
+            self.__positions__[from_row][from_col] = None
+            piece.set_position(to_row, to_col)
+            return True
+        return False
+        

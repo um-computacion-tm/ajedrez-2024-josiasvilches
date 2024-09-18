@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.017] - 17 / 09 / 2024
+Mejora en board
+
 ## [0.016] - 09 / 09 / 2024
 Mejora del movimiento de caballos
 
