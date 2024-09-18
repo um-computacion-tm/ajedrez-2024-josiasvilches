@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.018] - 18 / 09 / 2024
+Mejora en lógica de board, se agregó la verificación de movimiento de las piezas, y sus posibles resultados (lugar vacío, pieza de otro color y pieza del mismo color)
+
 ## [0.017] - 17 / 09 / 2024
 Mejora en board
 
