@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.019] - 19 / 09 / 2024
+Se agregó el archivo de exceptions y se agregaron algunas excepciones en board y se puede arrancar el juego con el archivo cli.py
+
 ## [0.018] - 18 / 09 / 2024
 Mejora en lógica de board, se agregó la verificación de movimiento de las piezas, y sus posibles resultados (lugar vacío, pieza de otro color y pieza del mismo color)
 

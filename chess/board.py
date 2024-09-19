@@ -4,6 +4,7 @@ from chess.bishop import *
 from chess.rook import *
 from chess.knight import *
 from chess.pawn import *
+from chess.exceptions import InvalidMoveError
 
 class Board:
     def __init__(self):
@@ -65,24 +66,25 @@ class Board:
     def move_piece(self, from_row, from_col, to_row, to_col):
         piece = self.get_piece(from_row, from_col)
         if piece is None:
-            return False # No hay pieza para mover
+            raise InvalidMoveError("No hay pieza en la posición de origen.")# No hay pieza para mover
         
-        if self.is_valid_move(from_row, from_col, to_row, to_col):
-            target_piece = self.get_piece(to_row, to_col)
+        if not self.is_valid_move(from_row, from_col, to_row, to_col):
+            raise InvalidMoveError("Movimiento inválido.")
 
-            # Si hay una pieza en la casilla de destino
-            if target_piece is not None:
-                if target_piece.get_color() != piece.get_color():
-                    # Captura: remover la pieza de la casilla destino
-                    print(f"{piece.__class__.__name__} captura a {target_piece.__class__.__name__} en ({to_row}, {to_col})")
-                else:
-                    return False  # No se puede capturar una pieza del mismo color
+        target_piece = self.get_piece(to_row, to_col)
+
+        # Si hay una pieza en la casilla de destino
+        if target_piece is not None:
+            if target_piece.get_color() != piece.get_color():
+                # Captura: remover la pieza de la casilla destino
+                print(f"{piece.__class__.__name__} captura a {target_piece.__class__.__name__} en ({to_row}, {to_col})")
+            else:
+                return InvalidMoveError  # No se puede capturar una pieza del mismo color
                 
-            # Mover la pieza
-            self.__positions__[to_row][to_col] = piece
-            self.__positions__[from_row][from_col] = None
-            piece.set_position(to_row, to_col)
-            return True
+        # Mover la pieza
+        self.__positions__[to_row][to_col] = piece
+        self.__positions__[from_row][from_col] = None
+        piece.set_position(to_row, to_col)
 
         return False
     
