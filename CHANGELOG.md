@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.02] - 20 / 09 / 2024
+Excepciones integradas al archivo de chess
+
 ## [0.019] - 19 / 09 / 2024
 Se agregó el archivo de exceptions y se agregaron algunas excepciones en board y se puede arrancar el juego con el archivo cli.py
 
