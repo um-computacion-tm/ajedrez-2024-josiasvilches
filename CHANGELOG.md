@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.021] - 21 / 09 / 2024
+Intento de mostrar el tablero a la hora de ejecutar cli.py
+
 ## [0.02] - 20 / 09 / 2024
 Excepciones integradas al archivo de chess
 

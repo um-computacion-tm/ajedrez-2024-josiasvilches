@@ -59,9 +59,15 @@ class Board:
     def is_valid_move(self, from_row, from_col, to_row, to_col):
         piece = self.get_piece(from_row, from_col)
         if piece is None:
+            print(f"No hay pieza en posición inicial ({from_row}, {from_col})")
             return False
+        
         possible_moves = piece.get_possible_moves(from_row, from_col)
-        return (to_row, to_col) in possible_moves
+        if (to_row, to_col) not in possible_moves:
+            print(f"Movimiento inválido de ({from_row}, {from_col}) a ({to_row}, {to_col})")
+            return False
+        return True
+    
     
     def move_piece(self, from_row, from_col, to_row, to_col):
         piece = self.get_piece(from_row, from_col)
@@ -88,3 +94,19 @@ class Board:
 
         return False
     
+     # Método para mostrar el tablero
+    def display_board(self):
+        print("  a b c d e f g h")  # Etiquetas de columnas
+        print(" +-----------------+")
+        for row in range(8):
+            row_str = f"{8 - row}|"  # Etiquetas de filas
+            for col in range(8):
+                piece = self.__positions__[row][col]
+                if piece is None:
+                    row_str += ". "  # Espacio vacío
+                else:
+                    row_str += str(piece) + " "
+            row_str += f"|{8 - row}"
+            print(row_str)
+        print(" +-----------------+")
+        print("  a b c d e f g h")  # Etiquetas de columnas

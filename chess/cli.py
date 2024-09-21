@@ -1,5 +1,6 @@
 from chess.chess import Chess
 from chess.exceptions import InvalidMoveError
+from chess.board import Board
 
 
 
@@ -14,6 +15,7 @@ def main():
 
 def play(chess):
     try:
+        chess.diplay_board()
         # Input for movement
         from_row = input("From row: ")
         if from_row.lower() == "salir":
@@ -38,12 +40,8 @@ def play(chess):
         to_col = int(to_col)
 
         # Move piece
-        chess.move(
-            from_row, 
-            from_col, 
-            to_row, 
-            to_col
-        )
+        chess.move(from_row, from_col, to_row, to_col)
+
     except Exception as e:
         print("Movimiento No Valido")
         
