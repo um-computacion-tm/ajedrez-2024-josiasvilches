@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.022] - 21 / 09 / 2024
+Finalmente se muestra el tablero con letras
+
 ## [0.021] - 21 / 09 / 2024
 Intento de mostrar el tablero a la hora de ejecutar cli.py
 
