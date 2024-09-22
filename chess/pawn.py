@@ -5,6 +5,12 @@ class Pawn(Piece):
         super().__init__(color, "Pawn", fila, columna)
         self.__has_moved__ = False
 
+    def __str__(self):
+        if self.get_color() == 'White':
+            return 'P'
+        else:
+            return 'p'
+
     def is_valid_move(self, end_fila, end_columna, board):
         start_fila, start_columna = self.get_position()
 

@@ -17,5 +17,8 @@ class Bishop(Piece):
         return False
     
     def __str__(self):
-        return super().__str__() + 'B'
+        if self.get_color() == 'White':
+            return 'B'
+        else:
+            return 'b'
     

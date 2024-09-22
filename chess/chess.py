@@ -44,6 +44,15 @@ class Chess:
         else:
             self.__turn__ = "White"
 
-        def get_turn(self):
+    def get_turn(self):
         # show actual turn
-            return self.__turn__
+        return self.__turn__
+    
+    def display_board(self):
+        # show the board
+        print("  0 1 2 3 4 5 6 7")
+        for row in range(8):
+            row_pieces = [self.__board__.get_piece(row, col) for col in range(8)]
+            row_str = f"{row} " + " ".join([str(p) if p else '.' for p in row_pieces])
+            print(row_str)
+        print("\n")

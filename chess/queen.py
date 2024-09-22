@@ -28,11 +28,11 @@ class Queen(Piece):
                     break
             else:
                 break
-    # def __str__(self):
-    #     if self.__color__ == 'White':
-    #         return 'Q'
-    #     else:
-    #         return 'q'
+    def __str__(self):
+        if self.__color__ == 'White':
+            return 'Q'
+        else:
+            return 'q'
     # hacer el método de definir dependiendo del color (eso en piece) en la pieza solo poner White_str y black_str
 
 

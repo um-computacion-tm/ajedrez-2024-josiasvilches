@@ -1,13 +1,13 @@
-from chess.chess import Chess
+from chess.chess import *
 from chess.exceptions import InvalidMoveError
-from chess.board import Board
+from chess.board import *
 
 
 
 def main():
     chess = Chess()
 
-    print("Bienvenido al Ajedrez. Para salir, ingresa 'salir' en cualquier momento.")
+    print("Bienvenido al Ajedrez. Para salir, ingresa 'salir' en cualquier momento. \nBlancos empiezan, es decir los que están en mayúsculas.")
     
     while True:
         if not play(chess):
@@ -15,22 +15,22 @@ def main():
 
 def play(chess):
     try:
-        chess.diplay_board()
+        chess.display_board()
         # Input for movement
         from_row = input("From row: ")
         if from_row.lower() == "salir":
             return False
         
         from_col = input("From col: ")
-        if from_row.lower() == "salir":
+        if from_col.lower() == "salir":
             return False
         
         to_row = input("To row: ")
-        if from_row.lower() == "salir":
+        if to_row.lower() == "salir":
             return False
         
         to_col = input("To col: ")
-        if from_row.lower() == "salir":
+        if to_col.lower() == "salir":
             return False
         
         # Converts inputs into ints

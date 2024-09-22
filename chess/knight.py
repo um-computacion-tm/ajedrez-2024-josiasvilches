@@ -1,33 +1,26 @@
 from chess.pieces import *
 
 class Knight(Piece):
-    def __init__(self, color, fila=None, columna=None):
-        super().__init__(color, 'Knight', fila, columna)
+    def __init__(self, color, row=None, col=None):
+        super().__init__(color, 'Knight', row, col)
 
-    def is_valid(self, fila, columna):
-        if abs(self.fila - fila) == 2 and abs(self.columna - columna) == 1:
-            return True
-        if abs(self.fila - fila) == 1 and abs(self.columna - columna) == 2:
+    def is_valid_move(self, row, col, board):
+        # L movement
+        if (abs(start_row - row) == 2 and abs(start_col - col) == 1) or (abs(start_row - row) == 1 and abs(start_col - col) == 2):
             return True
         return False
     
-    def move(self, fila, columna):
-        if self.is_valid(fila, columna):
-            self.fila = fila
-            self.columna = columna
+    def move(self, row, col):
+        if self.is_valid(row, col):
+            self.row = row
+            self.col = col
             return True
         return False
     
     def __str__(self):
-        return super().__str__() + 'N'
-    
-    def __repr__(self):
-        return super().__repr__() + 'N'
-    
-    def __eq__(self, other):
-        return super().__eq__(other) and self.color == other.color and self.fila == other.fila and self.columna == other.columna            
-    
-    def __ne__(self, other):
-        return not self.__eq__(other)
+        if self.get_color() == 'White':
+            return 'N'
+        else:
+            return 'n'
     
     

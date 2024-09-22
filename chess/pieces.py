@@ -17,6 +17,10 @@ class Piece:
     # method to obtain the color of the piece
     def get_color(self):
         return self.__color__
+    
+    # every piece has a different way to move, so its declared on its own file
+    def possible_moves(self):
+        pass
 
     def traverse_directions(self, directions):
         possible_moves = []
