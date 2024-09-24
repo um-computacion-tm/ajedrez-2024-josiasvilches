@@ -1,18 +1,24 @@
 class Piece:
-    def __init__(self, color, name, fila, columna):
+    def __init__(self, color, name, row, col):
         self.__color__ = color
         self.__name__ = name
-        self.__fila__ = fila
-        self.__columna__ = columna
+        self.__row__ = row
+        self.__col__ = col
+
+    def __str__(self):
+        if self.__color__ == "WHITE":
+            return self.white_str
+        else:
+            return self.black_str
         
     # method to obtain the actual position of the piece
     def get_position(self):
-        return (self.__fila__, self.__columna__)
+        return (self.__row__, self.__col__)
 
     # method to change the position of the piece
-    def set_position(self, fila, columna):
-        self.__fila__ = fila
-        self.__columna__ = columna
+    def set_position(self, row, col):
+        self.__row__ = row
+        self.__col__ = col
 
     # method to obtain the color of the piece
     def get_color(self):
@@ -25,13 +31,13 @@ class Piece:
     def traverse_directions(self, directions):
         possible_moves = []
         for direction in directions:
-            fila, columna = self.__fila__, self.__columna__
+            row, col = self.__row__, self.__col__
 
             while True:
-                fila += direction[0]
-                columna += direction[1]
-                if 0 <= fila < 7 and 0 <= columna < 7:
-                    possible_moves.append((fila, columna))
+                row += direction[0]
+                col += direction[1]
+                if 0 <= row < 7 and 0 <= col < 7:
+                    possible_moves.append((row, col))
                 else:
                     break
 

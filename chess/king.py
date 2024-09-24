@@ -3,20 +3,14 @@ from chess.pieces import *
 class King(Piece):
     def __init__(self, color, fila=None, columna=None):
         super().__init__(color, 'King', fila, columna)
+        self.white_str = '♚'
+        self.black_str = '♔'
 
-    def is_valid_move(self, end_fila, end_columna, board):
-        start_fila, start_columna = self.get_position()
-        if abs(start_fila - end_fila) <= 1 and abs(start_columna - end_columna) <= 1:
+    def is_valid_move(self, end_row, end_col, board):
+        start_row, start_col = self.get_position()
+        if abs(start_row - end_row) <= 1 and abs(start_col - end_col) <= 1:
             return True
         return False
-    def move(self, end_fila, end_columna):
-        self.set_position(end_fila, end_columna)
-        return True
-    
-    def __str__(self):
-        if self.get_color() == 'White':
-            return 'K'
-        else:
-            return 'k'
-    
-    
+    def move(self, end_row, end_col):
+        self.set_position(end_row, end_col)
+        return True    

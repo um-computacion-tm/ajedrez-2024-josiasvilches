@@ -1,6 +1,9 @@
 # Changelog
 
-## [0.022] - 21 / 09 / 2024
+## [0.023] - 23 / 09 / 2024
+se cambiaron las letras a fichas para poder identificar más rápido de quién es el turno y se simplificó la forma de asignar el color a cada ficha
+
+## [0.022] - 22 / 09 / 2024
 Finalmente se muestra el tablero con letras
 
 ## [0.021] - 21 / 09 / 2024

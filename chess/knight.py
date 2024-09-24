@@ -3,6 +3,8 @@ from chess.pieces import *
 class Knight(Piece):
     def __init__(self, color, row=None, col=None):
         super().__init__(color, 'Knight', row, col)
+        self.white_str = '♞'
+        self.black_str = '♘'
 
     def is_valid_move(self, row, col, board):
         # L movement
@@ -16,11 +18,4 @@ class Knight(Piece):
             self.col = col
             return True
         return False
-    
-    def __str__(self):
-        if self.get_color() == 'White':
-            return 'N'
-        else:
-            return 'n'
-    
     
