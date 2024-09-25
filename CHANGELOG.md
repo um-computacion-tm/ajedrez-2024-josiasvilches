@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.025] - 25 / 09 / 2024
+Corrección de visualización de piezas, ahora se ven blancas y negras en el tablero
+
+
 ## [0.024] - 24 / 09 / 2024
 'start_position' fue cambiado por 'from_position' correspondiente y así con todos los posibles movimientos
 

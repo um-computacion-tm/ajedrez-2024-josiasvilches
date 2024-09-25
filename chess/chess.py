@@ -1,10 +1,4 @@
 from chess.board import Board
-from chess.bishop import Bishop
-from chess.knight import Knight
-from chess.rook import Rook
-from chess.pawn import Pawn
-from chess.king import King
-from chess.queen import Queen
 from chess.exceptions import InvalidMoveError
 
 class Chess:
@@ -29,6 +23,7 @@ class Chess:
         
         # Realizar el movimiento
         movimiento_exitoso = self.__board__.move_piece(from_row, from_col, to_row, to_col)
+        print(f"Movido {piece.__class__.__name__} de ({from_row}, {from_col}) a ({to_row}, {to_col})")
         
         if not movimiento_exitoso:
             raise InvalidMoveError("No se pudo realizar el movimiento.")
@@ -39,6 +34,7 @@ class Chess:
     
     def change_turn(self):
         # changes the turn between white and black
+        
         if self.__turn__ == "White":
             self.__turn__ = "Black"
         else:
@@ -50,9 +46,5 @@ class Chess:
     
     def display_board(self):
         # show the board
-        print("  0 1 2 3 4 5 6 7")
-        for row in range(8):
-            row_pieces = [self.__board__.get_piece(row, col) for col in range(8)]
-            row_str = f"{row} " + " ".join([str(p) if p else '.' for p in row_pieces])
-            print(row_str)
-        print("\n")
+        self.__board__.display_board()
+

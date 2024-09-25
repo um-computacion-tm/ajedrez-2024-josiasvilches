@@ -6,7 +6,7 @@ class Piece:
         self.__col__ = col
 
     def __str__(self):
-        if self.__color__ == "WHITE":
+        if self.__color__ == "White":
             return self.white_str
         else:
             return self.black_str

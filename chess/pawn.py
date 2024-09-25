@@ -13,13 +13,15 @@ class Pawn(Piece):
 
         # Movimiento estándar de un paso hacia adelante
         if from_col == to_col:
+            # verifies that the destination square is empty
             if board[to_row][to_col] is None:
+                # one step forward
                 if (to_row - from_row) == direction:
                     return True
             # Movimiento inicial de dos pasos hacia adelante
-            if not self.__has_moved__ and (to_row - from_row) == 2 * direction:
-                if board[from_row + direction][from_col] is None:
-                    return True
+                if not self.__has_moved__ and (to_row - from_row) == 2 * direction:
+                    if board[from_row + direction][from_col] is None:
+                        return True
         
         # Movimiento de captura diagonal
         if abs(from_col - to_col) == 1 and (to_row - from_row) == direction:

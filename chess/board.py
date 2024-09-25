@@ -8,12 +8,13 @@ from chess.exceptions import InvalidMoveError
 
 class Board:
     def __init__(self):
-        self.__positions__ = []
-        for fila in range(8):
-            columns = []
-            for col in range(8):
-                columns.append(None)
-            self.__positions__.append(columns)
+        self.__positions__ = [[None for _ in range(8)] for _ in range(8)]
+        # self.__positions__ = []
+        # for fila in range(8):
+        #     columns = []
+        #     for col in range(8):
+        #         columns.append(None)
+        #     self.__positions__.append(columns)
 
         # Posiciones iniciales de los Rooks
         self.__positions__[0][0] = Rook("Black", 0, 0)
@@ -80,19 +81,21 @@ class Board:
         target_piece = self.get_piece(to_row, to_col)
 
         # Si hay una pieza en la casilla de destino
-        if target_piece is not None:
-            if target_piece.get_color() != piece.get_color():
-                # Captura: remover la pieza de la casilla destino
-                print(f"{piece.__class__.__name__} captura a {target_piece.__class__.__name__} en ({to_row}, {to_col})")
-            else:
-                return InvalidMoveError  # No se puede capturar una pieza del mismo color
+        if target_piece is not None and target_piece.get_color() == piece.get_color():
+            raise InvalidMoveError("No se puede capturar una pieza del mismo color.")
+            
+        if target_piece.get_color() != piece.get_color():
+            # Captura: remover la pieza de la casilla destino
+            print(f"{piece.__class__.__name__} captura a {target_piece.__class__.__name__} en ({to_row}, {to_col})")
+        else:
+            return InvalidMoveError  # No se puede capturar una pieza del mismo color
                 
         # Mover la pieza
         self.__positions__[to_row][to_col] = piece
         self.__positions__[from_row][from_col] = None
         piece.set_position(to_row, to_col)
 
-        return False
+        print(f"Tablero actualizado: {piece} movido a ({to_row}, {to_col})")
     
      # Método para mostrar el tablero
     def display_board(self):
