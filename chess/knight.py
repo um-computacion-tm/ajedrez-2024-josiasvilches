@@ -8,7 +8,7 @@ class Knight(Piece):
 
     def is_valid_move(self, row, col, board):
         # L movement
-        if (abs(start_row - row) == 2 and abs(start_col - col) == 1) or (abs(start_row - row) == 1 and abs(start_col - col) == 2):
+        if (abs(from_row - row) == 2 and abs(from_col - col) == 1) or (abs(from_row - row) == 1 and abs(from_col - col) == 2):
             return True
         return False
     

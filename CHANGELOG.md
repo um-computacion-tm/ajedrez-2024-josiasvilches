@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.024] - 24 / 09 / 2024
+'start_position' fue cambiado por 'from_position' correspondiente y así con todos los posibles movimientos
+
 ## [0.023] - 23 / 09 / 2024
 se cambiaron las letras a fichas para poder identificar más rápido de quién es el turno y se simplificó la forma de asignar el color a cada ficha
 

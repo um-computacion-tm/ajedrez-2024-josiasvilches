@@ -10,10 +10,10 @@ class Board:
     def __init__(self):
         self.__positions__ = []
         for fila in range(8):
-            col = []
-            for columna in range(8):
-                col.append(None)
-            self.__positions__.append(col)
+            columns = []
+            for col in range(8):
+                columns.append(None)
+            self.__positions__.append(columns)
 
         # Posiciones iniciales de los Rooks
         self.__positions__[0][0] = Rook("Black", 0, 0)
@@ -72,7 +72,7 @@ class Board:
     def move_piece(self, from_row, from_col, to_row, to_col):
         piece = self.get_piece(from_row, from_col)
         if piece is None:
-            raise InvalidMoveError("No hay pieza en la posición de origen.")# No hay pieza para mover
+            raise InvalidMoveError("No hay pieza en la posición de origen.") # No hay pieza para mover
         
         if not self.is_valid_move(from_row, from_col, to_row, to_col):
             raise InvalidMoveError("Movimiento inválido.")

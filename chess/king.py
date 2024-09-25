@@ -6,11 +6,11 @@ class King(Piece):
         self.white_str = '♚'
         self.black_str = '♔'
 
-    def is_valid_move(self, end_row, end_col, board):
-        start_row, start_col = self.get_position()
-        if abs(start_row - end_row) <= 1 and abs(start_col - end_col) <= 1:
+    def is_valid_move(self, to_row, to_col, board):
+        from_row, from_col = self.get_position()
+        if abs(from_row - to_row) <= 1 and abs(from_col - to_col) <= 1:
             return True
         return False
-    def move(self, end_row, end_col):
-        self.set_position(end_row, end_col)
+    def move(self, to_row, to_col):
+        self.set_position(to_row, to_col)
         return True    
