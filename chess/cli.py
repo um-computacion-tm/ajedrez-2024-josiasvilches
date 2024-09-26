@@ -16,37 +16,34 @@ def main():
 def play(chess):
     try:
         chess.display_board()
-        # Input for movement
-        from_row = input("From row: ")
+        # Input for movement (converting traditional chess notation)
+        from_row = input("From row (1-8): ")
         if from_row.lower() == "salir":
             return False
         
-        from_col = input("From col: ")
+        from_col = input("From col (a-h): ").lower()
         if from_col.lower() == "salir":
             return False
         
-        to_row = input("To row: ")
+        to_row = input("To row (1-8): ")
         if to_row.lower() == "salir":
             return False
         
-        to_col = input("To col: ")
+        to_col = input("To col (a-h): ").lower()
         if to_col.lower() == "salir":
             return False
         
-        # Converts inputs into ints
-        from_row = int(from_row)
-        from_col = int(from_col)
-        to_row = int(to_row)
-        to_col = int(to_col)
+        # Convert the row and column inputs to the board indices
+        from_row = int(from_row) - 1  # Rows are input as 1-8, so we subtract 1
+        from_col = ord(from_col) - ord('a')  # Convert 'a'-'h' to 0-7 using ASCII values
+        to_row = int(to_row) - 1  # Rows are input as 1-8, so we subtract 1
+        to_col = ord(to_col) - ord('a')  # Convert 'a'-'h' to 0-7 using ASCII values
 
         # Move piece
         chess.move(from_row, from_col, to_row, to_col)
 
-    except Exception as e:
-        print("Movimiento No Valido")
-        
     except ValueError:
-        print("Entrada no válida. Por favor ingresa números enteros para las posiciones.")
+        print("Entrada no válida. Por favor ingresa números enteros para las filas y letras para las columnas.")
     
     except InvalidMoveError as e:
         print(f"Error: {e}")

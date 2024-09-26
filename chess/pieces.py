@@ -2,7 +2,7 @@ class Piece:
     def __init__(self, color, name, row, col):
         self.__color__ = color
         self.__name__ = name
-        self.__row__ = row
+        self._row = row
         self.__col__ = col
 
     def __str__(self):
@@ -11,15 +11,23 @@ class Piece:
         else:
             return self.black_str
         
-    # method to obtain the actual position of the piece
+     # Método para obtener la posición actual de la pieza
     def get_position(self):
-        return (self.__row__, self.__col__)
+        return (self._row, self._col)
 
-    # method to change the position of the piece
+    # Método para cambiar la posición de la pieza
     def set_position(self, row, col):
-        self.__row__ = row
-        self.__col__ = col
+        self._row = row
+        self._col = col
 
+    # Método para obtener la fila actual de la pieza
+    def get_row(self):
+        return self._row
+
+    # Método para obtener la columna actual de la pieza
+    def get_col(self):
+        return self._col
+    
     # method to obtain the color of the piece
     def get_color(self):
         return self.__color__

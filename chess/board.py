@@ -9,13 +9,7 @@ from chess.exceptions import InvalidMoveError
 class Board:
     def __init__(self):
         self.__positions__ = [[None for _ in range(8)] for _ in range(8)]
-        # self.__positions__ = []
-        # for fila in range(8):
-        #     columns = []
-        #     for col in range(8):
-        #         columns.append(None)
-        #     self.__positions__.append(columns)
-
+        self.turn = "White"  # White starts
         # Posiciones iniciales de los Rooks
         self.__positions__[0][0] = Rook("Black", 0, 0)
         self.__positions__[0][7] = Rook("Black", 0, 7)
@@ -47,6 +41,8 @@ class Board:
             self.__positions__[1][i] = Pawn("Black", 1, i)
             self.__positions__[6][i] = Pawn("White", 6, i)
 
+    def alternate_turn(self):
+        self.turn = "White" if self.turn == "Black" else "Black"    
 
     def get_piece(self, row, col):
         return self.__positions__[row][col]
@@ -72,9 +68,14 @@ class Board:
     
     def move_piece(self, from_row, from_col, to_row, to_col):
         piece = self.get_piece(from_row, from_col)
+
         if piece is None:
             raise InvalidMoveError("No hay pieza en la posición de origen.") # No hay pieza para mover
         
+        if piece.get_color() != self.turn:
+            raise InvalidMoveError(f"Es el turno de {self.turn}, no de {piece.get_color()}.")
+        
+
         if not self.is_valid_move(from_row, from_col, to_row, to_col):
             raise InvalidMoveError("Movimiento inválido.")
 
@@ -84,16 +85,16 @@ class Board:
         if target_piece is not None and target_piece.get_color() == piece.get_color():
             raise InvalidMoveError("No se puede capturar una pieza del mismo color.")
             
-        if target_piece.get_color() != piece.get_color():
+        if target_piece is not None and target_piece.get_color() != piece.get_color():
             # Captura: remover la pieza de la casilla destino
             print(f"{piece.__class__.__name__} captura a {target_piece.__class__.__name__} en ({to_row}, {to_col})")
-        else:
-            return InvalidMoveError  # No se puede capturar una pieza del mismo color
                 
         # Mover la pieza
         self.__positions__[to_row][to_col] = piece
         self.__positions__[from_row][from_col] = None
         piece.set_position(to_row, to_col)
+
+        self.alternate_turn()
 
         print(f"Tablero actualizado: {piece} movido a ({to_row}, {to_col})")
     

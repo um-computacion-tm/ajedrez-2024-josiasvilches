@@ -30,6 +30,25 @@ class Pawn(Piece):
     
 
         return False
+    
+    def get_possible_moves(self, from_row, from_col):
+        possible_moves = []
+        if self.get_color() == "White":
+            # Movimiento normal hacia adelante
+            if self.get_row() > 0:
+                possible_moves.append((from_row - 1, from_col))
+            # Movimiento de doble casilla desde la posición inicial
+            if from_row == 6 and self.get_row() > 1:
+                possible_moves.append((from_row - 2, from_col))
+        else:
+            # Movimiento normal hacia adelante para las negras
+            if self.get_row() < 7:
+                possible_moves.append((from_row + 1, from_col))
+            # Movimiento de doble casilla desde la posición inicial
+            if from_row == 1 and self.get_row() < 6:
+                possible_moves.append((from_row + 2, from_col))
+
+        return possible_moves
 
     def move(self, to_row, to_col):
         self.__has_moved__ = True
