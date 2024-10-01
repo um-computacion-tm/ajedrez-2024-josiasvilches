@@ -1,5 +1,12 @@
 # Changelog
 
+
+## [0.028] - 01 / 10 / 2024
+Creación de testeos para pawn
+
+## [0.027] - 27 / 09 / 2024
+Eliminación carpeta venv
+
 ## [0.026] - 26 / 09 / 2024
 Finalmente se mueven las piezas
 
