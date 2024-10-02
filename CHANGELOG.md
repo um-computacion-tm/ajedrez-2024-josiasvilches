@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.029] - 02 / 10 / 2024
+Testeos bishop
 
 ## [0.028] - 01 / 10 / 2024
 Creación de testeos para pawn
