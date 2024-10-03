@@ -1,55 +1,6 @@
 from chess.pieces import *
 
 class Pawn(Piece):
-    def __init__(self, color, row, col):
-        super().__init__(color, "Pawn", row, col)
-        self.__has_moved__ = False
-        self.white_str = '♟'
-        self.black_str = '♙'
+    __white_str__ = '♟'
+    __black_str__ = '♙'
 
-    def is_valid_move(self, to_row, to_col, board):
-        from_row, from_col = self.get_position()
-        direction = 1 if self.get_color() == 'White' else -1
-
-        # Movimiento estándar de un paso hacia adelante
-        if from_col == to_col:
-            # verifies that the destination square is empty
-            if board[to_row][to_col] is None:
-                # one step forward
-                if (to_row - from_row) == direction:
-                    return True
-            # Movimiento inicial de dos pasos hacia adelante
-                if not self.__has_moved__ and (to_row - from_row) == 2 * direction:
-                    if board[from_row + direction][from_col] is None:
-                        return True
-        
-        # Movimiento de captura diagonal
-        if abs(from_col - to_col) == 1 and (to_row - from_row) == direction:
-            if board[to_row][to_col] is not None and board[to_row][to_col].get_color() != self.get_color():
-                return True
-    
-
-        return False
-    
-    def get_possible_moves(self, from_row, from_col):
-        possible_moves = []
-        if self.get_color() == "White":
-            # Movimiento normal hacia adelante
-            if self.get_row() > 0:
-                possible_moves.append((from_row - 1, from_col))
-            # Movimiento de doble casilla desde la posición inicial
-            if from_row == 6 and self.get_row() > 1:
-                possible_moves.append((from_row - 2, from_col))
-        else:
-            # Movimiento normal hacia adelante para las negras
-            if self.get_row() < 7:
-                possible_moves.append((from_row + 1, from_col))
-            # Movimiento de doble casilla desde la posición inicial
-            if from_row == 1 and self.get_row() < 6:
-                possible_moves.append((from_row + 2, from_col))
-
-        return possible_moves
-
-    def move(self, to_row, to_col):
-        self.__has_moved__ = True
-        self.set_position(to_row, to_col)

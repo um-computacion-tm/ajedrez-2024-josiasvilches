@@ -5,6 +5,8 @@ from chess.rook import *
 from chess.knight import *
 from chess.pawn import *
 from chess.exceptions import InvalidMoveError
+from chess.pieces import *
+from chess.movements import *
 
 class Board:
     def __init__(self):
@@ -42,8 +44,9 @@ class Board:
             self.__positions__[6][i] = Pawn("White", 6, i)
 
     def alternate_turn(self):
-        self.turn = "White" if self.turn == "Black" else "Black"    
-
+        self.turn = "White" if self.turn == "Black" else "Black"
+        print(f"Es el turno de {self.turn}")
+    
     def get_piece(self, row, col):
         return self.__positions__[row][col]
     
@@ -103,14 +106,14 @@ class Board:
         print("  a b c d e f g h")  # Etiquetas de columnas
         print(" +-----------------+")
         for row in range(8):
-            row_str = f"{8 - row}|"  # Etiquetas de filas
+            row_str = f"{1 + row}|"  # Etiquetas de filas
             for col in range(8):
                 piece = self.__positions__[row][col]
                 if piece is None:
                     row_str += ". "  # Espacio vacío
                 else:
                     row_str += str(piece) + " "
-            row_str += f"|{8 - row}"
+            row_str += f"|{1 + row}"
             print(row_str)
         print(" +-----------------+")
         print("  a b c d e f g h")  # Etiquetas de columnas

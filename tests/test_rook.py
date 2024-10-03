@@ -4,7 +4,7 @@ from chess.rook import *
 class TestRook(unittest.TestCase):
     def test_str(self):
         rook = Rook("White", 0, 0)
-        self.assertEqual(str(rook), "R")
+        self.assertEqual(str(rook), "♜")
 
     def test_move_vertical_desc(self):
         rook = Rook("White", 0, 0)

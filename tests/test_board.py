@@ -1,17 +1,11 @@
 import unittest
 from chess.chess import Board
-from chess.king import *
-from chess.king import *
-from chess.queen import *
-# from chess.pawn import *
-from chess.rook import *
-from chess.knight import *
-from chess.bishop import *
+from chess.chess import Chess
 
 
 class TestBoard(unittest.TestCase):
     
-    def setUp(self):
+    def test_board_setup(self):
         self.board = Board()
     
     def test_initial_rook_positions(self):

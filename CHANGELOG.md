@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.030] - 03 / 10 / 2024
+Reventamos todo para que mejore la calificación de codeclimate, se agregó el archivo movements.py para verter todos los posibles movimientos de cada ficha en un solo archivo, en esta versión no funciona el programa
+
 ## [0.029] - 02 / 10 / 2024
 Testeos bishop
 
