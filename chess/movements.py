@@ -130,16 +130,44 @@ class MovementRules:
     
     # Knight
 
-    def is_valid_move(self, row, col, board):
-        # L movement
-        if (abs(from_row - row) == 2 and abs(from_col - col) == 1) or (abs(from_row - row) == 1 and abs(from_col - col) == 2):
-            return True
-        return False
-    
-    def move(self, row, col):
-        if self.is_valid(row, col):
-            self.row = row
-            self.col = col
-            return True
-        return False
-    
+    def is_valid_diagonal_move(from_row, from_col, to_row, to_col, board):
+        # Verificar que el movimiento sea diagonal
+        if abs(from_row - to_row) != abs(from_col - to_col):
+            return False
+
+        # Determinar la dirección del movimiento
+        row_step = 1 if to_row > from_row else -1
+        col_step = 1 if to_col > from_col else -1
+
+        # Verificar que no haya piezas en el camino
+        current_row, current_col = from_row + row_step, from_col + col_step
+        while current_row != to_row and current_col != to_col:
+            if board[current_row][current_col] is not None:
+                return False
+            current_row += row_step
+            current_col += col_step
+
+        # Verificar que el destino esté dentro de los límites del tablero
+        if not (0 <= to_row < 8 and 0 <= to_col < 8):
+            return False
+
+        return True
+
+    # Ejemplo de uso en la línea 133
+    def move_piece(from_row, from_col, to_row, to_col, board):
+        if is_valid_diagonal_move(from_row, from_col, to_row, to_col, board):
+            # Realizar el movimiento
+            board[to_row][to_col] = board[from_row][from_col]
+            board[from_row][from_col] = None
+        else:
+            raise ValueError("Movimiento diagonal no válido")
+
+    # Ejemplo de uso
+    board = [[None for _ in range(8)] for _ in range(8)]
+    board[0][2] = 'Bishop'  # Colocar un alfil en la posición inicial
+
+    try:
+        move_piece(0, 2, 2, 4, board)  # Intentar mover el alfil a una posición válida
+        print("Movimiento realizado con éxito")
+    except ValueError as e:
+        print(e)

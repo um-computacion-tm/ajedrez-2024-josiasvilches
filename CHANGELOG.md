@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.031] - 04 / 10 / 2024
+Se aplicó la corrección al archivo de movimientos, en específico al movimiento oblicuo
+
 ## [0.030] - 03 / 10 / 2024
 Reventamos todo para que mejore la calificación de codeclimate, se agregó el archivo movements.py para verter todos los posibles movimientos de cada ficha en un solo archivo, en esta versión no funciona el programa
 
