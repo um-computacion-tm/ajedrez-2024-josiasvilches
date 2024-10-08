@@ -1,6 +1,7 @@
 from chess.board import Board
 from chess.exceptions import InvalidMoveError
 from chess.movements import *
+from chess.pieces import *
 
 class Chess:
     def __init__(self):

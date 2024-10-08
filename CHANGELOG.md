@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.032] - 07 / 10 / 2024
+intento de mostrar el board con el cambio al archivo movements
+
 ## [0.031] - 04 / 10 / 2024
 Se aplicó la corrección al archivo de movimientos, en específico al movimiento oblicuo
 

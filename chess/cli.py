@@ -1,6 +1,8 @@
 from chess.chess import *
 from chess.exceptions import InvalidMoveError
 from chess.board import *
+from chess.pieces import *
+from chess.movements import *
 
 
 
