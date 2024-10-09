@@ -28,7 +28,8 @@ class MovementRules:
             self.col = col
             return True
         return False
-    def posible_positions(self, row, col):
+    
+    def possible_positions(self, row, col):
         possibles = []
         for i in range(1, 8):
             if 0 <= row + i < 8 and 0 <= col + i < 8:
@@ -42,19 +43,15 @@ class MovementRules:
         return possibles
 
     # Pawn
-
     def is_valid_move(self, to_row, to_col, board):
         from_row, from_col = self.get_position()
         direction = 1 if self.get_color() == 'White' else -1
 
         # Movimiento estándar de un paso hacia adelante
         if from_col == to_col:
-            # verifies that the destination square is empty
             if board[to_row][to_col] is None:
-                # one step forward
                 if (to_row - from_row) == direction:
                     return True
-            # Movimiento inicial de dos pasos hacia adelante
                 if not self.__has_moved__ and (to_row - from_row) == 2 * direction:
                     if board[from_row + direction][from_col] is None:
                         return True
@@ -64,23 +61,18 @@ class MovementRules:
             if board[to_row][to_col] is not None and board[to_row][to_col].get_color() != self.get_color():
                 return True
     
-
         return False
     
     def get_possible_moves(self, from_row, from_col):
         possible_moves = []
         if self.get_color() == "White":
-            # Movimiento normal hacia adelante
             if self.get_row() > 0:
                 possible_moves.append((from_row - 1, from_col))
-            # Movimiento de doble casilla desde la posición inicial
             if from_row == 6 and self.get_row() > 1:
                 possible_moves.append((from_row - 2, from_col))
         else:
-            # Movimiento normal hacia adelante para las negras
             if self.get_row() < 7:
                 possible_moves.append((from_row + 1, from_col))
-            # Movimiento de doble casilla desde la posición inicial
             if from_row == 1 and self.get_row() < 6:
                 possible_moves.append((from_row + 2, from_col))
 
@@ -114,8 +106,6 @@ class MovementRules:
                     break
                 else:
                     break
-            else:
-                break
     
     # King
 
@@ -124,22 +114,20 @@ class MovementRules:
         if abs(from_row - to_row) <= 1 and abs(from_col - to_col) <= 1:
             return True
         return False
+
     def move(self, to_row, to_col):
         self.set_position(to_row, to_col)
         return True    
     
     # Knight
 
-    def is_valid_diagonal_move(from_row, from_col, to_row, to_col, board):
-        # Verificar que el movimiento sea diagonal
+    def is_valid_diagonal_move(self, from_row, from_col, to_row, to_col, board):
         if abs(from_row - to_row) != abs(from_col - to_col):
             return False
 
-        # Determinar la dirección del movimiento
         row_step = 1 if to_row > from_row else -1
         col_step = 1 if to_col > from_col else -1
 
-        # Verificar que no haya piezas en el camino
         current_row, current_col = from_row + row_step, from_col + col_step
         while current_row != to_row and current_col != to_col:
             if board[current_row][current_col] is not None:
@@ -147,27 +135,14 @@ class MovementRules:
             current_row += row_step
             current_col += col_step
 
-        # Verificar que el destino esté dentro de los límites del tablero
         if not (0 <= to_row < 8 and 0 <= to_col < 8):
             return False
 
         return True
 
-    # Ejemplo de uso en la línea 133
-    def move_piece(from_row, from_col, to_row, to_col, board):
-        if is_valid_diagonal_move(from_row, from_col, to_row, to_col, board):
-            # Realizar el movimiento
+    def move_piece(self, from_row, from_col, to_row, to_col, board):
+        if self.is_valid_diagonal_move(from_row, from_col, to_row, to_col, board):
             board[to_row][to_col] = board[from_row][from_col]
             board[from_row][from_col] = None
         else:
             raise ValueError("Movimiento diagonal no válido")
-
-    # Ejemplo de uso
-    board = [[None for _ in range(8)] for _ in range(8)]
-    board[0][2] = 'Bishop'  # Colocar un alfil en la posición inicial
-
-    try:
-        move_piece(0, 2, 2, 4, board)  # Intentar mover el alfil a una posición válida
-        print("Movimiento realizado con éxito")
-    except ValueError as e:
-        print(e)

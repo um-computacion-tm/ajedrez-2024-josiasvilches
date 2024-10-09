@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.033] - 08 / 10 / 2024
+se muestra nuevamente el tablero, movimientos todavía no son posibles
+
 ## [0.032] - 07 / 10 / 2024
 intento de mostrar el board con el cambio al archivo movements
 
