@@ -19,7 +19,7 @@ def play(chess):
     try:
         chess.display_board()
         # Input for movement (converting traditional chess notation)
-        from_row = input("From row (1-8): ")
+        from_row = input("From row (0-7): ")
         if from_row.lower() == "salir":
             return False
         
@@ -27,7 +27,7 @@ def play(chess):
         if from_col.lower() == "salir":
             return False
         
-        to_row = input("To row (1-8): ")
+        to_row = input("To row (0-7): ")
         if to_row.lower() == "salir":
             return False
         
@@ -36,9 +36,9 @@ def play(chess):
             return False
         
         # Convert the row and column inputs to the board indices
-        from_row = int(from_row) - 1  # Rows are input as 1-8, so we subtract 1
+        from_row = int(from_row)  # Rows are input as 1-8, so we subtract 1
         from_col = ord(from_col) - ord('a')  # Convert 'a'-'h' to 0-7 using ASCII values
-        to_row = int(to_row) - 1  # Rows are input as 1-8, so we subtract 1
+        to_row = int(to_row)  # Rows are input as 1-8, so we subtract 1
         to_col = ord(to_col) - ord('a')  # Convert 'a'-'h' to 0-7 using ASCII values
 
         # Move piece

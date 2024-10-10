@@ -25,11 +25,7 @@ class Chess:
         
         # Realizar el movimiento
         movimiento_exitoso = self.__board__.move_piece(from_row, from_col, to_row, to_col)
-        print(f"Movido {piece.__class__.__name__} de ({from_row}, {from_col}) a ({to_row}, {to_col})")
         
-        if not movimiento_exitoso:
-            raise InvalidMoveError("No se pudo realizar el movimiento.")
-
 
         # if the movement is valid there's a change in the turn
         self.change_turn()

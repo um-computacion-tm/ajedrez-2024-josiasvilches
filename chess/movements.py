@@ -4,32 +4,33 @@ from chess.knight import Knight
 from chess.bishop import Bishop
 from chess.queen import Queen
 from chess.king import King
+from chess.pieces import Piece
 
 
 class MovementRules:
 
     @staticmethod
     def get_pawn_moves(pawn, board):
+        possible_moves = []
         row, col = pawn.get_position()
-        moves = []
-        direction = -1 if pawn.get_color() == "White" else 1
-        
-        # Movimiento hacia adelante
-        if board.get_piece(row + direction, col) is None:
-            moves.append((row + direction, col))
 
-            # Movimiento de dos casillas desde la posición inicial
-            if (pawn.get_color() == "White" and row == 6) or (pawn.get_color() == "Black" and row == 1):
-                if board.get_piece(row + 2 * direction, col) is None:
-                    moves.append((row + 2 * direction, col))
+        # Movimiento hacia adelante (1 casilla)
+        if board.is_empty(row - 1, col):
+            possible_moves.append((row - 1, col))
+
+        # Movimiento hacia adelante (2 casillas) desde la fila inicial
+        if row == 6 and board.is_empty(row - 2, col):
+            possible_moves.append((row - 2, col))
 
         # Capturas diagonales
-        if col - 1 >= 0 and board.get_piece(row + direction, col - 1) is not None and board.get_piece(row + direction, col - 1).get_color() != pawn.get_color():
-            moves.append((row + direction, col - 1))
-        if col + 1 < 8 and board.get_piece(row + direction, col + 1) is not None and board.get_piece(row + direction, col + 1).get_color() != pawn.get_color():
-            moves.append((row + direction, col + 1))
+        if col > 0 and board.get_piece(row - 1, col - 1) and board.get_piece(row - 1, col - 1).get_color() != pawn.get_color():
+            possible_moves.append((row - 1, col - 1))
         
-        return moves
+        if col < 7 and board.get_piece(row - 1, col + 1) and board.get_piece(row - 1, col + 1).get_color() != pawn.get_color():
+            possible_moves.append((row - 1, col + 1))
+
+        return possible_moves
+
 
     @staticmethod
     def get_rook_moves(rook, board):

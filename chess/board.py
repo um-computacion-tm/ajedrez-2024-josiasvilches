@@ -50,70 +50,44 @@ class Board:
     def get_piece(self, row, col):
         return self.__positions__[row][col]
     
-    def get_piece_color(self, row, col):
-        piece = self.get_piece(row, col)
-        if piece is not None:
-            return self.__positions__[row][col].get_color()
-        return None
-    
     def is_valid_move(self, from_row, from_col, to_row, to_col):
-        piece = self.get_piece(from_row, from_col)
-        if piece is None:
-            print(f"No hay pieza en posición inicial ({from_row}, {from_col})")
+        # Verificar que las coordenadas estén dentro de los límites del tablero
+        if not (0 <= from_row < 8 and 0 <= from_col < 8 and 0 <= to_row < 8 and 0 <= to_col < 8):
             return False
-        
-        possible_moves = piece.get_possible_moves(from_row, from_col)
-        if (to_row, to_col) not in possible_moves:
-            print(f"Movimiento inválido de ({from_row}, {from_col}) a ({to_row}, {to_col})")
-            return False
-        return True
-    
+        # Verificar si la casilla de destino está vacía o tiene una pieza enemiga
+        destination_piece = self.get_piece(to_row, to_col)
+        origin_piece = self.get_piece(from_row, from_col)
+
+        if destination_piece is None:
+            return True  # Movimiento válido si la casilla está vacía
+        elif destination_piece.get_color() != origin_piece.get_color():
+            return True  # Movimiento válido si es una pieza enemiga
+
+        return False  # Movimiento no válido si es una pieza aliada
     
     def move_piece(self, from_row, from_col, to_row, to_col):
         piece = self.get_piece(from_row, from_col)
-
-        if piece is None:
-            raise InvalidMoveError("No hay pieza en la posición de origen.") # No hay pieza para mover
-        
-        if piece.get_color() != self.turn:
-            raise InvalidMoveError(f"Es el turno de {self.turn}, no de {piece.get_color()}.")
-        
-
-        if not self.is_valid_move(from_row, from_col, to_row, to_col):
-            raise InvalidMoveError("Movimiento inválido.")
-
-        target_piece = self.get_piece(to_row, to_col)
-
-        # Si hay una pieza en la casilla de destino
-        if target_piece is not None and target_piece.get_color() == piece.get_color():
-            raise InvalidMoveError("No se puede capturar una pieza del mismo color.")
-            
-        if target_piece is not None and target_piece.get_color() != piece.get_color():
-            # Captura: remover la pieza de la casilla destino
-            print(f"{piece.__class__.__name__} captura a {target_piece.__class__.__name__} en ({to_row}, {to_col})")
-                
-        # Mover la pieza
-        self.__positions__[to_row][to_col] = piece
-        self.__positions__[from_row][from_col] = None
-        piece.set_position(to_row, to_col)
-
-        self.alternate_turn()
+        if piece:
+            self.__positions__[to_row][to_col] = piece
+            self.__positions__[from_row][from_col] = None
+            piece.set_position(to_row, to_col)
 
         print(f"Tablero actualizado: {piece} movido a ({to_row}, {to_col})")
+        self.alternate_turn()
     
      # Método para mostrar el tablero
     def display_board(self):
         print("  a b c d e f g h")  # Etiquetas de columnas
         print(" +-----------------+")
         for row in range(8):
-            row_str = f"{1 + row}|"  # Etiquetas de filas
+            row_str = f"{0 + row}|"  # Etiquetas de filas
             for col in range(8):
                 piece = self.__positions__[row][col]
                 if piece is None:
                     row_str += ". "  # Espacio vacío
                 else:
                     row_str += str(piece) + " "
-            row_str += f"|{1 + row}"
+            row_str += f"|{0 + row}"
             print(row_str)
         print(" +-----------------+")
         print("  a b c d e f g h")  # Etiquetas de columnas

@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.035] - 10 / 10 / 2024
+se retocaron funciones, movimientos habilitados, errores de jugabilidad en algunas piezas
+
 ## [0.034] - 09 / 10 / 2024
 modificación a movements.py para poder mejorar la calidad del código, movimientos aún deshabilitados
 
