@@ -1,33 +1,45 @@
 class Piece:
-    def __init__(self, color, nombre, fila, columna):
+    def __init__(self, color, row, col):
         self.__color__ = color
-        self.__nombre__ = nombre
-        self.__fila__ = fila
-        self.__columna__ = columna
-        
-    # Getters y Setters de los atributos
+        self.__row__ = row
+        self.__col__ = col
+
+    def __str__(self):
+        if self.__color__ == "White":
+            return self.__white_str__
+        else:
+            return self.__black_str__
+
     def get_position(self):
-        return (self.__fila__, self.__columna__)
+        return (self.__row__, self.__col__)
 
-    def set_position(self, fila, columna):
-        self.__fila__ = fila
-        self.__columna__ = columna
+    def set_position(self, row, col):
+        self.__row__ = row
+        self.__col__ = col
 
+    def get_row(self):
+        return self.__row__
+
+    def get_col(self):
+        return self.__col__
+    
     def get_color(self):
         return self.__color__
 
-    def get_nombre(self):
-        return self.__nombre__
+    def possible_moves(self):
+        pass
 
-class Rook(Piece):
-    def __init__(self, color, fila=None, columna=None):
-        super().__init__(color, 'Rook', fila, columna)
+    def traverse_directions(self, directions):
+        possible_moves = []
+        for direction in directions:
+            row, col = self.__row__, self.__col__
 
+            while True:
+                row += direction[0]
+                col += direction[1]
+                if 0 <= row < 8 and 0 <= col < 8:
+                    possible_moves.append((row, col))
+                else:
+                    break
 
-class Knight(Piece):
-    def __init__(self, color, fila=None, columna=None):
-        super().__init__(color, 'Knight', fila, columna)
-
-class Bishop(Piece):
-    def __init__(self, color, fila=None, columna=None):
-        super().__init__(color, 'Bishop', fila, columna)
+        return possible_moves
