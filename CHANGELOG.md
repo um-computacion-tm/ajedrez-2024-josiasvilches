@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.034] - 09 / 10 / 2024
+modificación a movements.py para poder mejorar la calidad del código, movimientos aún deshabilitados
+
 ## [0.033] - 08 / 10 / 2024
 se muestra nuevamente el tablero, movimientos todavía no son posibles
 

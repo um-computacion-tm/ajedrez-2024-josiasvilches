@@ -1,148 +1,101 @@
+from chess.pawn import Pawn
+from chess.rook import Rook
+from chess.knight import Knight
+from chess.bishop import Bishop
+from chess.queen import Queen
+from chess.king import King
+
+
 class MovementRules:
-    # Rook
 
-    def get_possible_moves(self, from_row, from_col):
-        possibles = []
-        for to_row in range(from_row + 1, 8):
-            possibles.append((to_row, from_col))
-        for to_row in range(from_row - 1, -1, -1):
-            possibles.append((to_row, from_col))
-
-        # Movimiento horizontal hacia izquierda y derecha
-        for to_col in range(from_col + 1, 8):
-            possibles.append((from_row, to_col))
-        for to_col in range(from_col - 1, -1, -1):
-            possibles.append((from_row, to_col))
-
-        return possibles
-    
-    # Bishop
-    def is_valid(self, row, col):
-        if abs(self.row - row) == abs(self.col - col):
-            return True
-        return False
-    
-    def move(self, row, col):
-        if self.is_valid(row, col):
-            self.row = row
-            self.col = col
-            return True
-        return False
-    
-    def possible_positions(self, row, col):
-        possibles = []
-        for i in range(1, 8):
-            if 0 <= row + i < 8 and 0 <= col + i < 8:
-                possibles.append((row + i, col + i))
-            if 0 <= row - i < 8 and 0 <= col + i < 8:
-                possibles.append((row - i, col + i))
-            if 0 <= row + i < 8 and 0 <= col - i < 8:
-                possibles.append((row + i, col - i))
-            if 0 <= row - i < 8 and 0 <= col - i < 8:
-                possibles.append((row - i, col - i))
-        return possibles
-
-    # Pawn
-    def is_valid_move(self, to_row, to_col, board):
-        from_row, from_col = self.get_position()
-        direction = 1 if self.get_color() == 'White' else -1
-
-        # Movimiento estándar de un paso hacia adelante
-        if from_col == to_col:
-            if board[to_row][to_col] is None:
-                if (to_row - from_row) == direction:
-                    return True
-                if not self.__has_moved__ and (to_row - from_row) == 2 * direction:
-                    if board[from_row + direction][from_col] is None:
-                        return True
-        
-        # Movimiento de captura diagonal
-        if abs(from_col - to_col) == 1 and (to_row - from_row) == direction:
-            if board[to_row][to_col] is not None and board[to_row][to_col].get_color() != self.get_color():
-                return True
-    
-        return False
-    
-    def get_possible_moves(self, from_row, from_col):
-        possible_moves = []
-        if self.get_color() == "White":
-            if self.get_row() > 0:
-                possible_moves.append((from_row - 1, from_col))
-            if from_row == 6 and self.get_row() > 1:
-                possible_moves.append((from_row - 2, from_col))
-        else:
-            if self.get_row() < 7:
-                possible_moves.append((from_row + 1, from_col))
-            if from_row == 1 and self.get_row() < 6:
-                possible_moves.append((from_row + 2, from_col))
-
-        return possible_moves
-
-    def move(self, to_row, to_col):
-        self.__has_moved__ = True
-        self.set_position(to_row, to_col)
-
-    # Queen
-
-    def get_moves(self, board):
+    @staticmethod
+    def get_pawn_moves(pawn, board):
+        row, col = pawn.get_position()
         moves = []
-        for i in range(1, 8):
-            if self.row + i < 8:
-                if board[self.row + i][self.col] == None:
-                    moves.append((self.row + i, self.col))
-                elif board[self.row + i][self.col].color != self.color:
-                    moves.append((self.row + i, self.col))
-                    break
-                else:
-                    break
-            else:
-                break
-        for i in range(1, 8):
-            if self.row - i >= 0:
-                if board[self.row - i][self.col] == None:
-                    moves.append((self.row - i, self.col))
-                elif board[self.row - i][self.col].color != self.color:
-                    moves.append((self.row - i, self.col))
-                    break
-                else:
-                    break
-    
-    # King
+        direction = -1 if pawn.get_color() == "White" else 1
+        
+        # Movimiento hacia adelante
+        if board.get_piece(row + direction, col) is None:
+            moves.append((row + direction, col))
 
-    def is_valid_move(self, to_row, to_col, board):
-        from_row, from_col = self.get_position()
-        if abs(from_row - to_row) <= 1 and abs(from_col - to_col) <= 1:
-            return True
-        return False
+            # Movimiento de dos casillas desde la posición inicial
+            if (pawn.get_color() == "White" and row == 6) or (pawn.get_color() == "Black" and row == 1):
+                if board.get_piece(row + 2 * direction, col) is None:
+                    moves.append((row + 2 * direction, col))
 
-    def move(self, to_row, to_col):
-        self.set_position(to_row, to_col)
-        return True    
-    
-    # Knight
+        # Capturas diagonales
+        if col - 1 >= 0 and board.get_piece(row + direction, col - 1) is not None and board.get_piece(row + direction, col - 1).get_color() != pawn.get_color():
+            moves.append((row + direction, col - 1))
+        if col + 1 < 8 and board.get_piece(row + direction, col + 1) is not None and board.get_piece(row + direction, col + 1).get_color() != pawn.get_color():
+            moves.append((row + direction, col + 1))
+        
+        return moves
 
-    def is_valid_diagonal_move(self, from_row, from_col, to_row, to_col, board):
-        if abs(from_row - to_row) != abs(from_col - to_col):
-            return False
+    @staticmethod
+    def get_rook_moves(rook, board):
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Vertical y horizontal
+        return rook.traverse_directions(directions, board)
 
-        row_step = 1 if to_row > from_row else -1
-        col_step = 1 if to_col > from_col else -1
+    @staticmethod
+    def get_bishop_moves(bishop, board):
+        directions = [(1, 1), (-1, -1), (1, -1), (-1, 1)]  # Diagonales
+        return bishop.traverse_directions(directions, board)
 
-        current_row, current_col = from_row + row_step, from_col + col_step
-        while current_row != to_row and current_col != to_col:
-            if board[current_row][current_col] is not None:
-                return False
-            current_row += row_step
-            current_col += col_step
+    @staticmethod
+    def get_knight_moves(knight, board):
+        row, col = knight.get_position()
+        moves = []
+        possible_moves = [
+            (row + 2, col + 1), (row + 2, col - 1),
+            (row - 2, col + 1), (row - 2, col - 1),
+            (row + 1, col + 2), (row + 1, col - 2),
+            (row - 1, col + 2), (row - 1, col - 2)
+        ]
+        
+        for r, c in possible_moves:
+            if 0 <= r < 8 and 0 <= c < 8:
+                piece = board.get_piece(r, c)
+                if piece is None or piece.get_color() != knight.get_color():
+                    moves.append((r, c))
+        
+        return moves
 
-        if not (0 <= to_row < 8 and 0 <= to_col < 8):
-            return False
+    @staticmethod
+    def get_queen_moves(queen, board):
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]  # Todas direcciones
+        return queen.traverse_directions(directions, board)
 
-        return True
+    @staticmethod
+    def get_king_moves(king, board):
+        row, col = king.get_position()
+        moves = []
+        possible_moves = [
+            (row + 1, col), (row - 1, col), (row, col + 1), (row, col - 1),
+            (row + 1, col + 1), (row + 1, col - 1), (row - 1, col + 1), (row - 1, col - 1)
+        ]
+        
+        for r, c in possible_moves:
+            if 0 <= r < 8 and 0 <= c < 8:
+                piece = board.get_piece(r, c)
+                if piece is None or piece.get_color() != king.get_color():
+                    moves.append((r, c))
+        
+        return moves
 
-    def move_piece(self, from_row, from_col, to_row, to_col, board):
-        if self.is_valid_diagonal_move(from_row, from_col, to_row, to_col, board):
-            board[to_row][to_col] = board[from_row][from_col]
-            board[from_row][from_col] = None
+    @staticmethod
+    def get_possible_moves(piece, board):
+        """Devuelve los movimientos posibles según el tipo de pieza."""
+        if isinstance(piece, Pawn):
+            return MovementRules.get_pawn_moves(piece, board)
+        elif isinstance(piece, Rook):
+            return MovementRules.get_rook_moves(piece, board)
+        elif isinstance(piece, Knight):
+            return MovementRules.get_knight_moves(piece, board)
+        elif isinstance(piece, Bishop):
+            return MovementRules.get_bishop_moves(piece, board)
+        elif isinstance(piece, Queen):
+            return MovementRules.get_queen_moves(piece, board)
+        elif isinstance(piece, King):
+            return MovementRules.get_king_moves(piece, board)
         else:
-            raise ValueError("Movimiento diagonal no válido")
+            return []
