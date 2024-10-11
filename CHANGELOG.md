@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.036] - 11 / 10 / 2024
+modificación a movimiento de pawn
+
 ## [0.035] - 10 / 10 / 2024
 se retocaron funciones, movimientos habilitados, errores de jugabilidad en algunas piezas
 

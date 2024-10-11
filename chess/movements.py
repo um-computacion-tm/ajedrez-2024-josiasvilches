@@ -6,28 +6,27 @@ from chess.queen import Queen
 from chess.king import King
 from chess.pieces import Piece
 
-
 class MovementRules:
 
     @staticmethod
     def get_pawn_moves(pawn, board):
         possible_moves = []
+        direction = -1 if pawn.get_color() == "White" else 1
         row, col = pawn.get_position()
 
         # Movimiento hacia adelante (1 casilla)
-        if board.is_empty(row - 1, col):
-            possible_moves.append((row - 1, col))
+        if board.is_empty(row + direction, col):
+            possible_moves.append((row + direction, col))
 
         # Movimiento hacia adelante (2 casillas) desde la fila inicial
-        if row == 6 and board.is_empty(row - 2, col):
-            possible_moves.append((row - 2, col))
+        if (pawn.get_color() == "White" and row == 6) or (pawn.get_color() == "Black" and row == 1):
+            if board.is_empty(row + 2 * direction, col):
+                possible_moves.append((row + 2 * direction, col))
 
         # Capturas diagonales
-        if col > 0 and board.get_piece(row - 1, col - 1) and board.get_piece(row - 1, col - 1).get_color() != pawn.get_color():
-            possible_moves.append((row - 1, col - 1))
-        
-        if col < 7 and board.get_piece(row - 1, col + 1) and board.get_piece(row - 1, col + 1).get_color() != pawn.get_color():
-            possible_moves.append((row - 1, col + 1))
+        for dc in [-1, 1]:
+            if board.is_opponent_piece(row + direction, col + dc, pawn.get_color()):
+                possible_moves.append((row + direction, col + dc))
 
         return possible_moves
 
@@ -35,12 +34,12 @@ class MovementRules:
     @staticmethod
     def get_rook_moves(rook, board):
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Vertical y horizontal
-        return rook.traverse_directions(directions, board)
+        return MovementRules.traverse_directions(rook, directions, board)
 
     @staticmethod
     def get_bishop_moves(bishop, board):
         directions = [(1, 1), (-1, -1), (1, -1), (-1, 1)]  # Diagonales
-        return bishop.traverse_directions(directions, board)
+        return MovementRules.traverse_directions(bishop, directions, board)
 
     @staticmethod
     def get_knight_moves(knight, board):
@@ -85,18 +84,17 @@ class MovementRules:
 
     @staticmethod
     def get_possible_moves(piece, board):
-        """Devuelve los movimientos posibles según el tipo de pieza."""
-        if isinstance(piece, Pawn):
+        if piece.__class__.__name__ == 'Pawn':
             return MovementRules.get_pawn_moves(piece, board)
-        elif isinstance(piece, Rook):
+        elif piece.__class__.__name__ == 'Rook':
             return MovementRules.get_rook_moves(piece, board)
-        elif isinstance(piece, Knight):
+        elif piece.__class__.__name__ == 'Knight':
             return MovementRules.get_knight_moves(piece, board)
-        elif isinstance(piece, Bishop):
+        elif piece.__class__.__name__ == 'Bishop':
             return MovementRules.get_bishop_moves(piece, board)
-        elif isinstance(piece, Queen):
+        elif piece.__class__.__name__ == 'Queen':
             return MovementRules.get_queen_moves(piece, board)
-        elif isinstance(piece, King):
+        elif piece.__class__.__name__ == 'King':
             return MovementRules.get_king_moves(piece, board)
         else:
-            return []
+            raise ValueError(f"Unknown piece type: {piece.__class__.__name__}")
