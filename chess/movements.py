@@ -4,9 +4,9 @@ from chess.knight import Knight
 from chess.bishop import Bishop
 from chess.queen import Queen
 from chess.king import King
-from chess.pieces import Piece
+from chess.pieces import *
 
-class MovementRules:
+class MovementRules():
 
     @staticmethod
     def get_pawn_moves(pawn, board):
@@ -18,23 +18,20 @@ class MovementRules:
         if board.is_empty(row + direction, col):
             possible_moves.append((row + direction, col))
 
-        # Movimiento hacia adelante (2 casillas) desde la fila inicial
-        if (pawn.get_color() == "White" and row == 6) or (pawn.get_color() == "Black" and row == 1):
-            if board.is_empty(row + 2 * direction, col):
-                possible_moves.append((row + 2 * direction, col))
+            # Movimiento hacia adelante (2 casillas) desde la fila inicial solo si la primera está libre
+            if (pawn.get_color() == "White" and row == 6) or (pawn.get_color() == "Black" and row == 1):
+                if board.is_empty(row + 2 * direction, col):
+                    possible_moves.append((row + 2 * direction, col))
 
-        # Capturas diagonales
+        # Capturas diagonales (solo si hay una pieza del oponente)
         for dc in [-1, 1]:
-            if board.is_opponent_piece(row + direction, col + dc, pawn.get_color()):
-                possible_moves.append((row + direction, col + dc))
+            new_row = row + direction
+            new_col = col + dc
+            if board.is_within_bounds(new_row, new_col) and board.is_opponent_piece(new_row, new_col, pawn.get_color()):
+                possible_moves.append((new_row, new_col))
 
         return possible_moves
 
-
-    @staticmethod
-    def get_rook_moves(rook, board):
-        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Vertical y horizontal
-        return MovementRules.traverse_directions(rook, directions, board)
 
     @staticmethod
     def get_bishop_moves(bishop, board):
@@ -67,20 +64,9 @@ class MovementRules:
 
     @staticmethod
     def get_king_moves(king, board):
-        row, col = king.get_position()
-        moves = []
-        possible_moves = [
-            (row + 1, col), (row - 1, col), (row, col + 1), (row, col - 1),
-            (row + 1, col + 1), (row + 1, col - 1), (row - 1, col + 1), (row - 1, col - 1)
-        ]
-        
-        for r, c in possible_moves:
-            if 0 <= r < 8 and 0 <= c < 8:
-                piece = board.get_piece(r, c)
-                if piece is None or piece.get_color() != king.get_color():
-                    moves.append((r, c))
-        
-        return moves
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+        possible_moves = MovementRules.traverse_directions(king, directions, board, limit=1)
+        return possible_moves
 
     @staticmethod
     def get_possible_moves(piece, board):

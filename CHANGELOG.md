@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.037] - 12 / 10 / 2024
+correcciones a los movimientos de pawn
+
 ## [0.036] - 11 / 10 / 2024
 modificación a movimiento de pawn
 

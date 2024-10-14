@@ -26,7 +26,6 @@ class Chess:
         # Realizar el movimiento
         movimiento_exitoso = self.__board__.move_piece(from_row, from_col, to_row, to_col)
         
-
         # if the movement is valid there's a change in the turn
         self.change_turn()
     
