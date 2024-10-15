@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.038] - 13/ 10 / 2024
+correcciones al verificador de movimientos
+
 ## [0.037] - 12 / 10 / 2024
 correcciones a los movimientos de pawn
 
