@@ -1,7 +1,7 @@
 # Changelog
 
 ## [0.039] - 14 / 10 / 2024
-se le quitó el libre albedrío a las fichas, cambio de turnos deshabilitado
+se le quitó el libre albedrío a las fichas y se llevó cada función al lugar correspondiente, cambio de turnos deshabilitado
 
 ## [0.038] - 13 / 10 / 2024
 correcciones al verificador de movimientos
