@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.04] - 14 / 10 / 2024
+se quitó el libre albedrío a TODAS las fichas, las piezas 'respetan' al que tienen delante, se agregó un mensaje cuando una ficha elimina a otra
+
+## [0.039] - 14 / 10 / 2024
+se le quitó el libre albedrío a las fichas y se llevó cada función al lugar correspondiente, cambio de turnos deshabilitado
+
+## [0.038] - 13 / 10 / 2024
+correcciones al verificador de movimientos
+
+## [0.037] - 12 / 10 / 2024
+correcciones a los movimientos de pawn
+
+## [0.036] - 11 / 10 / 2024
+modificación a movimiento de pawn
+
 ## [0.035] - 10 / 10 / 2024
 se retocaron funciones, movimientos habilitados, errores de jugabilidad en algunas piezas
 

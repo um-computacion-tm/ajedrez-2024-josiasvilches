@@ -4,99 +4,87 @@ from chess.knight import Knight
 from chess.bishop import Bishop
 from chess.queen import Queen
 from chess.king import King
-from chess.pieces import Piece
-
+from chess.pieces import *
 
 class MovementRules:
 
-    @staticmethod
-    def get_pawn_moves(pawn, board):
-        possible_moves = []
-        row, col = pawn.get_position()
-
-        # Movimiento hacia adelante (1 casilla)
-        if board.is_empty(row - 1, col):
-            possible_moves.append((row - 1, col))
-
-        # Movimiento hacia adelante (2 casillas) desde la fila inicial
-        if row == 6 and board.is_empty(row - 2, col):
-            possible_moves.append((row - 2, col))
-
-        # Capturas diagonales
-        if col > 0 and board.get_piece(row - 1, col - 1) and board.get_piece(row - 1, col - 1).get_color() != pawn.get_color():
-            possible_moves.append((row - 1, col - 1))
-        
-        if col < 7 and board.get_piece(row - 1, col + 1) and board.get_piece(row - 1, col + 1).get_color() != pawn.get_color():
-            possible_moves.append((row - 1, col + 1))
-
-        return possible_moves
-
-
-    @staticmethod
-    def get_rook_moves(rook, board):
-        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Vertical y horizontal
-        return rook.traverse_directions(directions, board)
-
-    @staticmethod
-    def get_bishop_moves(bishop, board):
-        directions = [(1, 1), (-1, -1), (1, -1), (-1, 1)]  # Diagonales
-        return bishop.traverse_directions(directions, board)
-
-    @staticmethod
-    def get_knight_moves(knight, board):
-        row, col = knight.get_position()
-        moves = []
-        possible_moves = [
-            (row + 2, col + 1), (row + 2, col - 1),
-            (row - 2, col + 1), (row - 2, col - 1),
-            (row + 1, col + 2), (row + 1, col - 2),
-            (row - 1, col + 2), (row - 1, col - 2)
-        ]
-        
-        for r, c in possible_moves:
-            if 0 <= r < 8 and 0 <= c < 8:
-                piece = board.get_piece(r, c)
-                if piece is None or piece.get_color() != knight.get_color():
-                    moves.append((r, c))
-        
-        return moves
-
-    @staticmethod
-    def get_queen_moves(queen, board):
-        directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]  # Todas direcciones
-        return queen.traverse_directions(directions, board)
-
-    @staticmethod
-    def get_king_moves(king, board):
-        row, col = king.get_position()
-        moves = []
-        possible_moves = [
-            (row + 1, col), (row - 1, col), (row, col + 1), (row, col - 1),
-            (row + 1, col + 1), (row + 1, col - 1), (row - 1, col + 1), (row - 1, col - 1)
-        ]
-        
-        for r, c in possible_moves:
-            if 0 <= r < 8 and 0 <= c < 8:
-                piece = board.get_piece(r, c)
-                if piece is None or piece.get_color() != king.get_color():
-                    moves.append((r, c))
-        
-        return moves
+    # Direcciones generales
+    STRAIGHT_DIRECTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Vertical y horizontal
+    DIAGONAL_DIRECTIONS = [(1, 1), (1, -1), (-1, 1), (-1, -1)]  # Diagonales
+    KNIGHT_MOVES = [(2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
 
     @staticmethod
     def get_possible_moves(piece, board):
-        """Devuelve los movimientos posibles según el tipo de pieza."""
-        if isinstance(piece, Pawn):
-            return MovementRules.get_pawn_moves(piece, board)
-        elif isinstance(piece, Rook):
-            return MovementRules.get_rook_moves(piece, board)
-        elif isinstance(piece, Knight):
-            return MovementRules.get_knight_moves(piece, board)
+        if isinstance(piece, Rook):
+            return MovementRules.__traverse_directions(piece, board, MovementRules.STRAIGHT_DIRECTIONS)
         elif isinstance(piece, Bishop):
-            return MovementRules.get_bishop_moves(piece, board)
+            return MovementRules.__traverse_directions(piece, board, MovementRules.DIAGONAL_DIRECTIONS)
         elif isinstance(piece, Queen):
-            return MovementRules.get_queen_moves(piece, board)
+            return MovementRules.__traverse_directions(piece, board, 
+                MovementRules.STRAIGHT_DIRECTIONS + MovementRules.DIAGONAL_DIRECTIONS)
+        elif isinstance(piece, Knight):
+            return MovementRules.__single_step_moves(piece, board, MovementRules.KNIGHT_MOVES)
         elif isinstance(piece, King):
-            return MovementRules.get_king_moves(piece, board)
+            return MovementRules.__single_step_moves(piece, board, 
+                MovementRules.STRAIGHT_DIRECTIONS + MovementRules.DIAGONAL_DIRECTIONS)
+        elif isinstance(piece, Pawn):
+            return MovementRules.__get_pawn_moves(piece, board)
         else:
             return []
+
+    # Movimiento en línea recta (usado por la torre, alfil y reina)
+    @staticmethod
+    def __traverse_directions(piece, board, directions):
+        possible_moves = []
+        row, col = piece.get_position()
+
+        for dr, dc in directions:
+            r, c = row + dr, col + dc
+            while board.is_within_bounds(r, c):
+                if board.is_empty(r, c):
+                    possible_moves.append((r, c))
+                elif board.is_opponent_piece(r, c, piece.get_color()):
+                    possible_moves.append((r, c))
+                    break  # No puede continuar más allá de una captura
+                else:
+                    break  # Bloqueado por una pieza aliada
+                r += dr
+                c += dc
+
+        return possible_moves
+
+    # Movimiento de un solo paso (usado por el rey y el caballo)
+    @staticmethod
+    def __single_step_moves(piece, board, directions):
+        possible_moves = []
+        row, col = piece.get_position()
+
+        for dr, dc in directions:
+            r, c = row + dr, col + dc
+            if board.is_within_bounds(r, c) and (board.is_empty(r, c) or board.is_opponent_piece(r, c, piece.get_color())):
+                possible_moves.append((r, c))
+
+        return possible_moves
+
+    # Reglas específicas para el peón
+    @staticmethod
+    def __get_pawn_moves(pawn, board):
+        possible_moves = []
+        direction = -1 if pawn.get_color() == "White" else 1
+        row, col = pawn.get_position()
+
+        # Movimiento hacia adelante
+        if board.is_empty(row + direction, col):
+            possible_moves.append((row + direction, col))
+
+        # Movimiento doble si está en la fila inicial
+        if (pawn.get_color() == "White" and row == 6) or (pawn.get_color() == "Black" and row == 1):
+            if board.is_empty(row + 2 * direction, col) and board.is_empty(row + direction, col):
+                possible_moves.append((row + 2 * direction, col))
+
+        # Capturas diagonales
+        for dc in [-1, 1]:
+            if board.is_within_bounds(row + direction, col + dc) and board.is_opponent_piece(row + direction, col + dc, pawn.get_color()):
+                possible_moves.append((row + direction, col + dc))
+
+        return possible_moves
