@@ -7,7 +7,41 @@ class Chess:
         self.__board__ = Board()
         self.__turn__ = "White"
     
-    def move(self, from_row, from_col, to_row, to_col):
+    def is_within_board_limits(self, row, col):
+        return 0 <= row < 8 and 0 <= col < 8
+    
+    def is_path_clear_horizontal(self, from_row, from_col, to_col):
+        step = 1 if to_col > from_col else -1
+        for col in range(from_col + step, to_col, step):
+            if self.__board__.get_piece(from_row, col) is not None:
+                return False
+        return True
+    
+    def is_path_clear_vertical(self, from_row, from_col, to_row):
+        step = 1 if to_row > from_row else -1
+        for row in range(from_row + step, to_row, step):
+            if self.__board__.get_piece(row, from_col) is not None:
+                return False
+        return True
+    
+    def is_path_clear_diagonal(self, from_row, from_col, to_row, to_col):
+        row_step = 1 if to_row > from_row else -1
+        col_step = 1 if to_col > from_col else -1
+        current_row, current_col = from_row + row_step, from_col + col_step
+        while current_row != to_row and current_col != to_col:
+            if self.__board__.get_piece(current_row, current_col) is not None:
+                return False
+            current_row += row_step
+            current_col += col_step
+        return True
+    
+    def is_valid_straight_line_move(self, from_row, from_col, to_row, to_col):
+        return from_row == to_row or from_col == to_col
+    
+    def is_valid_diagonal_move(self, from_row, from_col, to_row, to_col):
+        return abs(from_row - to_row) == abs(from_col - to_col)
+
+    def move(self, from_row, from_col, to_row, to_col, piece):
         # Obtiene la pieza a mover
         piece = self.__board__.get_piece(from_row, from_col)
         if piece is None:
@@ -31,60 +65,27 @@ class Chess:
         piece_type = piece.get_name()
         color = piece.get_color()
         if piece_type == "Rook":
-            return is_valid_straight_line_move(from_row, from_col, to_row, to_col) and \
-                     (is_path_clear_horizontal(from_row, from_col, to_col, self.__board__) or \
-                        is_path_clear_vertical(from_row, from_col, to_row, self.__board__))
+            return self.is_valid_straight_line_move(from_row, from_col, to_row, to_col) and \
+                     (self.is_path_clear_horizontal(from_row, from_col, to_col, self.__board__) or \
+                        self.is_path_clear_vertical(from_row, from_col, to_row, self.__board__))
         
         elif piece_type == "Bishop":
-            return is_valid_diagonal_move(from_row, from_col, to_row, to_col) and \
-                        is_path_clear_diagonal(from_row, from_col, to_row, to_col, self.__board__)
+            return self.is_valid_diagonal_move(from_row, from_col, to_row, to_col) and \
+                        self.is_path_clear_diagonal(from_row, from_col, to_row, to_col, self.__board__)
         elif piece_type == "Knight":
             return self.is_valid_knight_move(from_row, from_col, to_row, to_col)
         elif piece_type == "Queen":
-            return (is_valid_straight_line_move(from_row, from_col, to_row, to_col) and \
-                    (is_path_clear_horizontal(from_row, from_col, to_col, self.__board__) or \
-                    is_path_clear_vertical(from_row, from_col, to_row, self.__board__))) or \
-                    (is_valid_diagonal_move(from_row, from_col, to_row, to_col) and \
-                    is_path_clear_diagonal(from_row, from_col, to_row, to_col, self.__board__))
+            return (self.is_valid_straight_line_move(from_row, from_col, to_row, to_col) and \
+                    (self.is_path_clear_horizontal(from_row, from_col, to_col, self.__board__) or \
+                    self.is_path_clear_vertical(from_row, from_col, to_row, self.__board__))) or \
+                    (self.is_valid_diagonal_move(from_row, from_col, to_row, to_col) and \
+                    self.is_path_clear_diagonal(from_row, from_col, to_row, to_col, self.__board__))
         elif piece_type == "King":
             return self.is_valid_king_move(from_row, from_col, to_row, to_col)
         elif piece_type == "Pawn":
             return self.is_valid_pawn_move(piece, from_row, from_col, to_row, to_col, self.__board__, color)
         return False  # Si no se reconoce la pieza, el movimiento es inválido
 
-    def is_within_board_limits(row, col):
-        return 0 <= row < 8 and 0 <= col < 8
-    
-    def is_path_clear_horizontal(from_row, from_col, to_col, board):
-        step = 1 if to_col > from_col else -1
-        for col in range(from_col + step, to_col, step):
-            if board.get_piece(from_row, col) is not None:
-                return False
-        return True
-
-    def is_path_clear_vertical(from_row, from_col, to_row, board):
-        step = 1 if to_row > from_row else -1
-        for row in range(from_row + step, to_row, step):
-            if board.get_piece(row, from_col) is not None:
-                return False
-        return True
-
-    def is_path_clear_diagonal(from_row, from_col, to_row, to_col, board):
-        row_step = 1 if to_row > from_row else -1
-        col_step = 1 if to_col > from_col else -1
-        current_row, current_col = from_row + row_step, from_col + col_step
-        while current_row != to_row and current_col != to_col:
-            if board.get_piece(current_row, current_col) is not None:
-                return False
-            current_row += row_step
-            current_col += col_step
-        return True
-
-    def is_valid_straight_line_move(from_row, from_col, to_row, to_col):
-        return from_row == to_row or from_col == to_col
-
-    def is_valid_diagonal_move(from_row, from_col, to_row, to_col):
-        return abs(from_row - to_row) == abs(from_col - to_col)
 
     def is_valid_knight_move(self, from_row, from_col, to_row, to_col):
         row_diff = abs(from_row - to_row)
@@ -94,23 +95,19 @@ class Chess:
     # Regla de movimiento para el rey (King)
     def is_valid_king_move(self, from_row, from_col, to_row, to_col):
         return max(abs(from_row - to_row), abs(from_col - to_col)) == 1
-
+    
     # Regla de movimiento para el peón (Pawn)
-    def is_valid_pawn_move(self, pawn, from_row, from_col, to_row, to_col):
-        direction = 1 if pawn.get_color() == "White" else -1
-        start_row = 1 if pawn.get_color() == "White" else 6
-        
+    def is_valid_pawn_move(self, from_row, from_col, to_row, to_col, color):
+        direction = 1 if color == 'White' else -1
+        start_row = 1 if color == 'White' else 6
         if from_col == to_col:
-            if from_row + direction == to_row and self.__board__.get_piece(to_row, to_col) is None: # Movimiento hacia adelante
+            if from_row + direction == to_row and self.__board__.get_piece(to_row, to_col) is None:
                 return True
-            
-            if from_row == start_row and from_row + 2 * direction == to_row and self.__board__.get_piece(to_row, to_col) is None: # Movimiento inicial doble
+            if from_row == start_row and from_row + 2 * direction == to_row and self.__board__.get_piece(to_row, to_col) is None:
                 return True
-        
-        elif abs(from_col - to_col) == 1 and from_row + direction == to_row and self.__board__.get_piece(to_row, to_col) is not None: # Captura diagonal
+        elif abs(from_col - to_col) == 1 and from_row + direction == to_row and self.__board__.get_piece(to_row, to_col) is not None:
             return True
-        
-        return False  # Cualquier otro movimiento es inválido para el peón
+        return False # Cualquier otro movimiento es inválido para el peón
 
     def move_piece(self, from_row, from_col, to_row, to_col, piece):
         """Mueve una pieza en tablero."""
@@ -129,20 +126,19 @@ class Chess:
             return "ReyEliminado"
         # return "Valido"
 
-
     def move_straight_line(self, from_row, from_col, to_row, to_col, direction):
         """Mueve en línea recta (horizontal o vertical) y verifica el bloqueo."""
         if direction == "horizontal":
-            return is_path_clear_horizontal(from_row, from_col, to_col, self.__board__)
+            return self.is_path_clear_horizontal(from_row, from_col, to_col, self.__board__)
         elif direction == "vertical":
-            return is_path_clear_vertical(from_row, from_col, to_row, self.__board__)
+            return self.is_path_clear_vertical(from_row, from_col, to_row, self.__board__)
         return False
     
     def move_diagonal(self, from_row, from_col, to_row, to_col):
         """Mueve en diagonal y verifica el bloqueo."""
-        if not is_valid_diagonal_move(from_row, from_col, to_row, to_col):
+        if not self.is_valid_diagonal_move(from_row, from_col, to_row, to_col):
             return False
-        return is_path_clear_diagonal(from_row, from_col, to_row, to_col, self.__board__)
+        return self.is_path_clear_diagonal(from_row, from_col, to_row, to_col)
 
     def get_ganador(self):
         return self.__ganador__
