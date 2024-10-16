@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.04] - 14 / 10 / 2024
+se quitó el libre albedrío a TODAS las fichas, las piezas 'respetan' al que tienen delante, se agregó un mensaje cuando una ficha elimina a otra
+
 ## [0.039] - 14 / 10 / 2024
 se le quitó el libre albedrío a las fichas y se llevó cada función al lugar correspondiente, cambio de turnos deshabilitado
 

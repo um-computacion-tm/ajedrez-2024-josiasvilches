@@ -6,7 +6,7 @@ class Chess:
     def __init__(self):
         self.__board__ = Board()
         self.__turn__ = "White"
-
+    
     def move(self, from_row, from_col, to_row, to_col):
         # Obtiene la pieza a mover
         piece = self.__board__.get_piece(from_row, from_col)
@@ -22,11 +22,14 @@ class Chess:
         if not self.is_valid_move(piece, from_row, from_col, to_row, to_col):
             raise InvalidMoveError("Movimiento no válido para la pieza seleccionada.")
         
-        # Realizar el movimiento
-        self.move_piece(from_row, from_col, to_row, to_col)
+        result = self.move_piece(from_row, from_col, to_row, to_col) # Realizar el movimiento y verificar si el rey fue capturado
 
+        if result == "ReyEliminado":
+            return "ReyEliminado"  # Enviar mensaje al main.py para finalizar el juego
+        
         # Cambiar el turno si el movimiento es exitoso
         self.alternate_turn()
+        return "Valido"  # Movimiento realizado correctamente
 
     def is_valid_move(self, piece, from_row, from_col, to_row, to_col):
         # Verificar que las coordenadas estén dentro de los límites del tablero
@@ -100,12 +103,65 @@ class Chess:
     def move_piece(self, from_row, from_col, to_row, to_col):
         # Mueve la pieza y actualiza la posición en el tablero
         piece = self.__board__.get_piece(from_row, from_col)
+        target_piece = self.__board__.get_piece(to_row, to_col)  # Verificar si hay una pieza en la posición destino
+        if self.check_blocked_path(piece, from_row, from_col, to_row, to_col): # Verificar si el camino está bloqueado por una pieza aliada
+            return "Movimiento bloqueado por una pieza aliada."
+        
         if piece:
-            self.__board__.set_piece(to_row, to_col, piece)
-            self.__board__.set_piece(from_row, from_col, None)
-            piece.set_position(to_row, to_col)
-
+            self.__board__.set_position(to_row, to_col, piece)
+            self.__board__.set_position(from_row, from_col, None)
             print(f"Tablero actualizado: {piece} movido a ({to_row}, {to_col})")
+
+        if isinstance(target_piece, King): # Verificar si la pieza capturada es el rey
+            self.__ganador__ = self.__turn__
+            return "Rey capturado. ¡Fin del juego!"
+        
+        return "Movimiento válido"
+
+    def check_blocked_path(self, piece, from_row, from_col, to_row, to_col):
+        """Verifica si el camino está bloqueado por piezas aliadas."""
+        if isinstance(piece, (Rook, Queen)):  # Movimiento en línea recta
+            if from_row == to_row:
+                return self.move_straight_line(from_row, from_col, to_row, to_col, "horizontal")
+            elif from_col == to_col:
+                return self.move_straight_line(from_row, from_col, to_row, to_col, "vertical")
+        elif isinstance(piece, Bishop):  # Movimiento en diagonal
+            return self.move_diagonal(from_row, from_col, to_row, to_col)
+        elif isinstance(piece, Queen):  # Reina también se mueve en diagonal
+            if from_row == to_row or from_col == to_col:
+                return self.move_straight_line(from_row, from_col, to_row, to_col, "line")
+            else:
+                return self.move_diagonal(from_row, from_col, to_row, to_col)
+        return False
+
+    def move_straight_line(self, from_row, from_col, to_row, to_col, direction):
+        """Mueve en línea recta (horizontal o vertical) y verifica el bloqueo."""
+        if direction == "horizontal":
+            step = 1 if to_col > from_col else -1
+            for col in range(from_col + step, to_col, step):
+                if self.__board__.get_piece(from_row, col) is not None:
+                    return True
+        elif direction == "vertical":
+            step = 1 if to_row > from_row else -1
+            for row in range(from_row + step, to_row, step):
+                if self.__board__.get_piece(row, from_col) is not None:
+                    return True
+        return False
+
+    def move_diagonal(self, from_row, from_col, to_row, to_col):
+        """Mueve en diagonal y verifica el bloqueo."""
+        row_step = 1 if to_row > from_row else -1
+        col_step = 1 if to_col > from_col else -1
+        row, col = from_row + row_step, from_col + col_step
+        while row != to_row and col != to_col:
+            if self.__board__.get_piece(row, col) is not None:
+                return True
+            row += row_step
+            col += col_step
+        return False
+
+    def get_ganador(self):
+        return self.__ganador__
 
     def alternate_turn(self):
         # Alternar turno entre "White" y "Black"
