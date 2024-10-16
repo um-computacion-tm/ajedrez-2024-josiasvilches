@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.041] - 15 / 10 / 2024
+corrección de código para mejora de calificación en codeclimate
+
 ## [0.04] - 14 / 10 / 2024
 se quitó el libre albedrío a TODAS las fichas, las piezas 'respetan' al que tienen delante, se agregó un mensaje cuando una ficha elimina a otra
 
