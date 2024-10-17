@@ -38,11 +38,15 @@ class Board:
         for i in range(8):
             self.__positions__[1][i] = Pawn("Black", "Pawn")
             self.__positions__[6][i] = Pawn("White", "Pawn")
-
     
     def get_piece(self, row, col):
         return self.__positions__[row][col]
     
+    def move_piece(self, from_row, from_col, to_row, to_col):
+        piece = self.get_piece(from_row, from_col)
+        self.__positions__[to_row][to_col] = piece
+        self.__positions__[from_row][from_col] = None
+
     def set_position(self, row, col, piece):
         self.__positions__[row][col] = piece
     
