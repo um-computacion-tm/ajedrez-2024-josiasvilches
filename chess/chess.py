@@ -95,16 +95,20 @@ class Chess:
     def is_valid_king_move(self, from_row, from_col, to_row, to_col):
         return max(abs(from_row - to_row), abs(from_col - to_col)) == 1
     
-    def is_valid_pawn_move(self, from_row, from_col, to_row, to_col, turn):
+    def is_valid_pawn_move(self, piece, from_row, from_col, to_row, to_col):
+        turn = piece.get_color()
         direction = 1 if turn == 'White' else -1
         start_row = 1 if turn == 'White' else 6
+
         if from_col == to_col:
             if from_row + direction == to_row and self.__board__.get_piece(to_row, to_col) is None:
                 return True
-            if from_row == start_row and from_row + 2 * direction == to_row and self.__board__.get_piece(to_row, to_col) is None:
+            if from_row == start_row and from_row + 2 * direction == to_row and self.__board__.get_piece(to_row, to_col) is None and self.__board__.get_piece(from_row + direction, from_col) is None:
                 return True
-        elif abs(from_col - to_col) == 1 and from_row + direction == to_row and self.__board__.get_piece(to_row, to_col) is not None:
-            return True
+        elif abs(from_col - to_col) == 1 and from_row + direction == to_row:
+            target_piece = self.__board__.get_piece(to_row, to_col)
+            if target_piece is not None and target_piece.get_color() != turn:
+                return True
         return False  # Cualquier otro movimiento es inválido para el peón
 
     def move_piece(self, from_row, from_col, to_row, to_col):
