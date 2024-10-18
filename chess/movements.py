@@ -16,21 +16,41 @@ class MovementRules:
     @staticmethod
     def get_possible_moves(piece, board):
         if isinstance(piece, Rook):
-            return MovementRules.__traverse_directions(piece, board, MovementRules.STRAIGHT_DIRECTIONS)
+            return MovementRules.__get_rook_moves(piece, board)
         elif isinstance(piece, Bishop):
-            return MovementRules.__traverse_directions(piece, board, MovementRules.DIAGONAL_DIRECTIONS)
+            return MovementRules.__get_bishop_moves(piece, board)
         elif isinstance(piece, Queen):
-            return MovementRules.__traverse_directions(piece, board, 
-                MovementRules.STRAIGHT_DIRECTIONS + MovementRules.DIAGONAL_DIRECTIONS)
+            return MovementRules.__get_queen_moves(piece, board)
         elif isinstance(piece, Knight):
-            return MovementRules.__single_step_moves(piece, board, MovementRules.KNIGHT_MOVES)
+            return MovementRules.__get_knight_moves(piece, board)
         elif isinstance(piece, King):
-            return MovementRules.__single_step_moves(piece, board, 
-                MovementRules.STRAIGHT_DIRECTIONS + MovementRules.DIAGONAL_DIRECTIONS)
+            return MovementRules.__get_king_moves(piece, board)
         elif isinstance(piece, Pawn):
             return MovementRules.__get_pawn_moves(piece, board)
         else:
             return []
+        
+    @staticmethod
+    def __get_rook_moves(piece, board):
+        return MovementRules.__traverse_directions(piece, board, MovementRules.STRAIGHT_DIRECTIONS)
+
+    @staticmethod
+    def __get_bishop_moves(piece, board):
+        return MovementRules.__traverse_directions(piece, board, MovementRules.DIAGONAL_DIRECTIONS)
+
+    @staticmethod
+    def __get_queen_moves(piece, board):
+        return MovementRules.__traverse_directions(piece, board, 
+            MovementRules.STRAIGHT_DIRECTIONS + MovementRules.DIAGONAL_DIRECTIONS)
+
+    @staticmethod
+    def __get_knight_moves(piece, board):
+        return MovementRules.__single_step_moves(piece, board, MovementRules.KNIGHT_MOVES)
+
+    @staticmethod
+    def __get_king_moves(piece, board):
+        return MovementRules.__single_step_moves(piece, board, 
+            MovementRules.STRAIGHT_DIRECTIONS + MovementRules.DIAGONAL_DIRECTIONS)
 
     # Movimiento en línea recta (usado por la torre, alfil y reina)
     @staticmethod
