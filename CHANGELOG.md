@@ -1,7 +1,7 @@
 # Changelog
 
 ## [0.042] - 17 / 10 / 2024
-cambio para mejorar movimiento de pawn, movimientos aún deshabilitados
+cambio para mejorar movimiento de pawn, movimientos habilitados
 
 ## [0.041] - 16 / 10 / 2024
 corrección de código para mejora de calificación en codeclimate, movimiento de peones deshabilitados

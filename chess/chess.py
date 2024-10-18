@@ -96,20 +96,43 @@ class Chess:
         return max(abs(from_row - to_row), abs(from_col - to_col)) == 1
     
     def is_valid_pawn_move(self, piece, from_row, from_col, to_row, to_col):
+        print(f"Verificando movimiento de peón: {piece}, de ({from_row}, {from_col}) a ({to_row}, {to_col})")
+    
         turn = piece.get_color()
-        direction = 1 if turn == 'White' else -1
-        start_row = 1 if turn == 'White' else 6
-
+        direction = -1 if turn == 'White' else 1  # Blancos se mueven hacia arriba, Negros hacia abajo
+        start_row = 6 if turn == 'White' else 1  # Fila de inicio de peones
+    
+        if self._is_valid_pawn_forward_move(from_row, from_col, to_row, to_col, direction, start_row):
+            print(f"Movimiento hacia adelante válido para el peón de {turn}")
+            return True
+    
+        if self._is_valid_pawn_capture(from_row, from_col, to_row, to_col, direction):
+            print(f"Captura diagonal válida para el peón de {turn}")
+            return True
+    
+        return False
+    
+    def _is_valid_pawn_forward_move(self, from_row, from_col, to_row, to_col, direction, start_row):
         if from_col == to_col:
-            if from_row + direction == to_row and self.__board__.get_piece(to_row, to_col) is None:
-                return True
-            if from_row == start_row and from_row + 2 * direction == to_row and self.__board__.get_piece(to_row, to_col) is None and self.__board__.get_piece(from_row + direction, from_col) is None:
-                return True
-        elif abs(from_col - to_col) == 1 and from_row + direction == to_row:
+            # Movimiento de un paso
+            if from_row + direction == to_row:
+                if self.__board__.get_piece(to_row, to_col) is None:
+                    return True
+    
+            # Movimiento de dos pasos desde la posición inicial
+            if from_row == start_row and from_row + 2 * direction == to_row:
+                if self.__board__.get_piece(to_row, to_col) is None and self.__board__.get_piece(from_row + direction, from_col) is None:
+                    return True
+    
+        return False
+    
+    def _is_valid_pawn_capture(self, from_row, from_col, to_row, to_col, direction):
+        if abs(from_col - to_col) == 1 and from_row + direction == to_row:
             target_piece = self.__board__.get_piece(to_row, to_col)
-            if target_piece is not None and target_piece.get_color() != turn:
+            if target_piece is not None and target_piece.get_color() != self.__turn__:
                 return True
-        return False  # Cualquier otro movimiento es inválido para el peón
+    
+        return False
 
     def move_piece(self, from_row, from_col, to_row, to_col):
         piece = self.__board__.get_piece(from_row, from_col)

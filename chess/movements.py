@@ -73,18 +73,22 @@ class MovementRules:
         direction = -1 if pawn.get_color() == "White" else 1
         row, col = pawn.get_position()
 
-        # Movimiento hacia adelante
+        MovementRules.__add_pawn_forward_moves(pawn, board, possible_moves, direction, row, col)
+
+        MovementRules.__add_pawn_diagonal_captures(pawn, board, possible_moves, direction, row, col)
+        return possible_moves
+    
+    @staticmethod
+    def __add_pawn_forward_moves(pawn, board, possible_moves, direction, row, col):
         if board.is_empty(row + direction, col):
             possible_moves.append((row + direction, col))
+            # Movimiento doble si está en la fila inicial
+            if (pawn.get_color() == "White" and row == 6) or (pawn.get_color() == "Black" and row == 1):
+                if board.is_empty(row + 2 * direction, col):
+                    possible_moves.append((row + 2 * direction, col))
 
-        # Movimiento doble si está en la fila inicial
-        if (pawn.get_color() == "White" and row == 6) or (pawn.get_color() == "Black" and row == 1):
-            if board.is_empty(row + 2 * direction, col) and board.is_empty(row + direction, col):
-                possible_moves.append((row + 2 * direction, col))
-
-        # Capturas diagonales
+    @staticmethod
+    def __add_pawn_diagonal_captures(pawn, board, possible_moves, direction, row, col):
         for dc in [-1, 1]:
             if board.is_within_bounds(row + direction, col + dc) and board.is_opponent_piece(row + direction, col + dc, pawn.get_color()):
                 possible_moves.append((row + direction, col + dc))
-
-        return possible_moves
