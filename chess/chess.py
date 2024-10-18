@@ -10,6 +10,15 @@ class Chess:
     
     def is_within_board_limits(self, row, col):
         return 0 <= row < 8 and 0 <= col < 8
+
+    def is_path_clear(self, from_row, from_col, to_row, to_col):
+        if from_row == to_row:
+            return self.is_path_clear_horizontal(from_row, from_col, to_col)
+        elif from_col == to_col:
+            return self.is_path_clear_vertical(from_row, from_col, to_row)
+        elif abs(from_row - to_row) == abs(from_col - to_col):
+            return self.is_path_clear_diagonal(from_row, from_col, to_row, to_col)
+        return False
     
     def is_path_clear_horizontal(self, from_row, from_col, to_col):
         step = 1 if to_col > from_col else -1
@@ -65,65 +74,82 @@ class Chess:
     def is_valid_move(self, piece, from_row, from_col, to_row, to_col):
         piece_type = piece.get_name()
         # color = piece.get_color()
-        if piece_type == "Rook":
-            return self.is_valid_straight_line_move(from_row, from_col, to_row, to_col) and \
-                     (self.is_path_clear_horizontal(from_row, from_col, to_col) or \
-                      self.is_path_clear_vertical(from_row, from_col, to_row))
+        if piece_type in ["Rook", "Bishop", "Queen"]:
+            return self.is_valid_straight_or_diagonal_move(piece_type, from_row, from_col, to_row, to_col)
+        else:
+            return self.is_valid_specific_move(from_row, from_col, to_row, to_col, piece)
         
+    def is_valid_straight_or_diagonal_move(self, piece_type, from_row, from_col, to_row, to_col):
+        if piece_type == "Rook":
+            return self.is_valid_straight_line_move(from_row, from_col, to_row, to_col)
         elif piece_type == "Bishop":
-            return self.is_valid_diagonal_move(from_row, from_col, to_row, to_col) and \
-                        self.is_path_clear_diagonal(from_row, from_col, to_row, to_col)
-        elif piece_type == "Knight":
-            return self.is_valid_knight_move(from_row, from_col, to_row, to_col)
+            return self.is_valid_diagonal_move(from_row, from_col, to_row, to_col)
         elif piece_type == "Queen":
-            return (self.is_valid_straight_line_move(from_row, from_col, to_row, to_col) and \
-                    (self.is_path_clear_horizontal(from_row, from_col, to_col) or \
-                    self.is_path_clear_vertical(from_row, from_col, to_row))) or \
-                    (self.is_valid_diagonal_move(from_row, from_col, to_row, to_col) and \
-                    self.is_path_clear_diagonal(from_row, from_col, to_row, to_col))
+            return self.is_valid_queen_move(from_row, from_col, to_row, to_col)
+        return False
+
+    def is_valid_specific_move(self, from_row, from_col, to_row, to_col, piece):
+        piece_type = piece.get_name()
+        if piece_type == "Knight":
+            return self.is_valid_knight_move(from_row, from_col, to_row, to_col)
         elif piece_type == "King":
             return self.is_valid_king_move(from_row, from_col, to_row, to_col)
         elif piece_type == "Pawn":
             return self.is_valid_pawn_move(piece, from_row, from_col, to_row, to_col)
-        return False  # Si no se reconoce la pieza, el movimiento es inválido
-
+        return False
+    
     def is_valid_knight_move(self, from_row, from_col, to_row, to_col):
         row_diff = abs(from_row - to_row)
         col_diff = abs(from_col - to_col)
         return (row_diff == 2 and col_diff == 1) or (row_diff == 1 and col_diff == 2)
 
+    def is_valid_rook_move(self, from_row, from_col, to_row, to_col):
+        return self.is_valid_straight_line_move(from_row, from_col, to_row, to_col) and \
+            self.is_path_clear(from_row, from_col, to_row, to_col)
+
+    def is_valid_bishop_move(self, from_row, from_col, to_row, to_col):
+        return self.is_valid_diagonal_move(from_row, from_col, to_row, to_col) and \
+            self.is_path_clear(from_row, from_col, to_row, to_col)
+
+    def is_valid_queen_move(self, from_row, from_col, to_row, to_col):
+        return (self.is_valid_straight_line_move(from_row, from_col, to_row, to_col) or \
+                self.is_valid_diagonal_move(from_row, from_col, to_row, to_col)) and \
+            self.is_path_clear(from_row, from_col, to_row, to_col)
+
     def is_valid_king_move(self, from_row, from_col, to_row, to_col):
         return max(abs(from_row - to_row), abs(from_col - to_col)) == 1
     
     def is_valid_pawn_move(self, piece, from_row, from_col, to_row, to_col):
-        print(f"Verificando movimiento de peón: {piece}, de ({from_row}, {from_col}) a ({to_row}, {to_col})")
-    
         turn = piece.get_color()
         direction = -1 if turn == 'White' else 1  # Blancos se mueven hacia arriba, Negros hacia abajo
         start_row = 6 if turn == 'White' else 1  # Fila de inicio de peones
-    
+
         if self._is_valid_pawn_forward_move(from_row, from_col, to_row, to_col, direction, start_row):
-            print(f"Movimiento hacia adelante válido para el peón de {turn}")
             return True
-    
+
         if self._is_valid_pawn_capture(from_row, from_col, to_row, to_col, direction):
-            print(f"Captura diagonal válida para el peón de {turn}")
             return True
-    
+
         return False
     
     def _is_valid_pawn_forward_move(self, from_row, from_col, to_row, to_col, direction, start_row):
         if from_col == to_col:
-            # Movimiento de un paso
-            if from_row + direction == to_row:
-                if self.__board__.get_piece(to_row, to_col) is None:
-                    return True
-    
-            # Movimiento de dos pasos desde la posición inicial
-            if from_row == start_row and from_row + 2 * direction == to_row:
-                if self.__board__.get_piece(to_row, to_col) is None and self.__board__.get_piece(from_row + direction, from_col) is None:
-                    return True
-    
+            if self._is_single_step_forward(from_row, to_row, direction, to_col):
+                return True
+            if self._is_double_step_forward(from_row, to_row, direction, start_row, to_col):
+                return True
+            return False
+
+    def _is_single_step_forward(self, from_row, to_row, direction, to_col):
+        if from_row + direction == to_row:
+            if self.__board__.get_piece(to_row, to_col) is None:
+                return True
+        return False
+
+    def _is_double_step_forward(self, from_row, to_row, direction, start_row, to_col):
+        if from_row == start_row and from_row + 2 * direction == to_row:
+            if self.__board__.get_piece(to_row, to_col) is None and self.__board__.get_piece(from_row + direction, to_col) is None:
+                return True
         return False
     
     def _is_valid_pawn_capture(self, from_row, from_col, to_row, to_col, direction):
