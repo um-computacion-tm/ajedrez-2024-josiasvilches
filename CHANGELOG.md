@@ -1,6 +1,12 @@
 # Changelog
 
-## [0.04] - 14 / 10 / 2024
+## [0.042] - 17 / 10 / 2024
+cambio para mejorar movimiento de pawn, movimientos habilitados
+
+## [0.041] - 16 / 10 / 2024
+corrección de código para mejora de calificación en codeclimate, movimiento de peones deshabilitados
+
+## [0.04] - 15 / 10 / 2024
 se quitó el libre albedrío a TODAS las fichas, las piezas 'respetan' al que tienen delante, se agregó un mensaje cuando una ficha elimina a otra
 
 ## [0.039] - 14 / 10 / 2024
