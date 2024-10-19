@@ -1,7 +1,7 @@
 # Changelog
 
 ## [0.044] - 19 / 10 / 2024
-Fixing issues:
+Fixing issues (some functions were redistributed and moved to other file):
 - file movements.py
 - file chess.py
 
