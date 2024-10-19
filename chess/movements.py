@@ -34,26 +34,42 @@ class MovementRules:
     @staticmethod
     def is_valid_move(context):
         piece_type = context.piece.get_name()
+
+        # Para piezas que tienen movimientos en línea recta o diagonal
         if piece_type in ["Rook", "Bishop", "Queen"]:
-            return MovementRules.is_valid_straight_or_diagonal_move(context)
-        else:
-            return MovementRules.is_valid_specific_piece_move(context)
+            return MovementRules.is_valid_directional_move(context)
 
-    @staticmethod
-    def is_valid_straight_or_diagonal_move(context):
-        piece_type = context.piece.get_name()
-        if piece_type == "Rook":
-            return MovementRules.is_valid_rook_move(context)
-        elif piece_type == "Bishop":
-            return MovementRules.is_valid_bishop_move(context)
-        elif piece_type == "Queen":
-            return MovementRules.is_valid_queen_move(context)
-        return False
-
+        # Para otras piezas con movimientos específicos
+        return MovementRules.is_valid_specific_piece_move(context)
+    
     @staticmethod
     def is_valid_specific_piece_move(context):
         piece_type = context.piece.get_name()
         if piece_type == "Knight":
+            return MovementRules.is_valid_knight_move(context)
+        elif piece_type == "King":
+            return MovementRules.is_valid_king_move(context)
+        elif piece_type == "Pawn":
+            return MovementRules.is_valid_pawn_move(context)
+        
+        return False
+    
+    @staticmethod
+    def is_valid_directional_move(context):
+        if MovementRules.is_valid_straight_line_move(context):
+            is_horizontal = context.from_row == context.to_row
+            return is_path_clear_linear(context.board, context.from_row, context.from_col, context.to_col, is_horizontal)
+        elif MovementRules.is_valid_diagonal_move(context):
+            return is_path_clear_diagonal(context.board, context.from_row, context.from_col, context.to_row, context.to_col)
+        return False
+
+
+    @staticmethod
+    def is_valid_piece_move(context):
+        piece_type = context.piece.get_name()
+        if piece_type in ["Rook", "Bishop", "Queen"]:
+            return MovementRules.is_valid_straight_or_diagonal_move(context)
+        elif piece_type == "Knight":
             return MovementRules.is_valid_knight_move(context)
         elif piece_type == "King":
             return MovementRules.is_valid_king_move(context)
@@ -83,9 +99,6 @@ class MovementRules:
         elif abs(context.from_row - context.to_row) == abs(context.from_col - context.to_col):
             return is_path_clear_diagonal(context.board, context.from_row, context.from_col, context.to_row, context.to_col)
         return False
-
-
-
 
     @staticmethod
     def is_valid_knight_move(context):
@@ -137,4 +150,3 @@ class MovementRules:
     @staticmethod
     def is_valid_diagonal_move(context):
         return abs(context.from_row - context.to_row) == abs(context.from_col - context.to_col)
-    
