@@ -15,23 +15,6 @@ class MovementRules:
     KNIGHT_MOVES = [(2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
 
     @staticmethod
-    def get_possible_moves(piece, board):
-        if isinstance(piece, Rook):
-            return MovementRules.is_valid_rook_move(piece, board)
-        elif isinstance(piece, Bishop):
-            return MovementRules.is_valid_bishop_move(piece, board)
-        elif isinstance(piece, Queen):
-            return MovementRules.is_valid_queen_move(piece, board)
-        elif isinstance(piece, Knight):
-            return MovementRules.is_valid_knight_move(piece, board)
-        elif isinstance(piece, King):
-            return MovementRules.is_valid_king_move(piece, board)
-        elif isinstance(piece, Pawn):
-            return MovementRules.is_valid_pawn_move(piece, board)
-        else:
-            return []
-
-    @staticmethod
     def is_valid_move(context):
         piece_type = context.piece.get_name()
 
