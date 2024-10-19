@@ -1,6 +1,7 @@
 from chess.board import Board
 from chess.exceptions import InvalidMoveError
 from chess.movements import MovementRules
+from chess.utils import MoveContext
 
 
 class Chess:
@@ -19,9 +20,11 @@ class Chess:
             raise InvalidMoveError("No hay ninguna pieza en esa posición.")
         # Verificar que la pieza sea del color correcto (según el turno)
         if piece.get_color() != self.__turn__:
-            raise InvalidMoveError(f"Es el turno de {self.__turn__}, no de {piece.get_color__}.")
+            raise InvalidMoveError(f"Es el turno de {self.__turn__}, no de {piece.get_color()}.")
+        # Crear el contexto del movimiento
+        context = MoveContext(self.__board__, piece, from_row, from_col, to_row, to_col, self.__turn__)
         # Verificar si el movimiento es válido según las reglas de la pieza
-        if not MovementRules.is_valid_move(self.__board__, piece, from_row, from_col, to_row, to_col):
+        if not MovementRules.is_valid_move(context):
             raise InvalidMoveError("Movimiento no válido para la pieza seleccionada.")
         
         result = self.move_piece(from_row, from_col, to_row, to_col) # Realizar el movimiento y verificar si el rey fue capturado

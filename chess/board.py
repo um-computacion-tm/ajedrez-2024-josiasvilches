@@ -8,6 +8,7 @@ from chess.pawn import *
 class Board:
     def __init__(self):
         self.__positions__ = [[None for _ in range(8)] for _ in range(8)]
+        self.__turn__ = "White"
         # Posiciones iniciales de los Rooks
         self.__positions__[0][0] = Rook("Black", "Rook")
         self.__positions__[0][7] = Rook("Black", "Rook")
@@ -49,6 +50,9 @@ class Board:
 
     def set_position(self, row, col, piece):
         self.__positions__[row][col] = piece
+
+    def get_turn(self):
+        return self.__turn__
     
     def display_board(self):
         print("  a b c d e f g h")  # Etiquetas de columnas

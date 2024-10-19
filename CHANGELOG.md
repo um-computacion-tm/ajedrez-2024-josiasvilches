@@ -5,6 +5,9 @@ Fixing issues (some functions were redistributed and moved to other file):
 - file movements.py
 - file chess.py
 
+new file:
+- utils.py (hosts auxiliary functions)
+
 ## [0.043] - 18 / 10 / 2024
 correcciones para mejora de código de codeclimate
 
