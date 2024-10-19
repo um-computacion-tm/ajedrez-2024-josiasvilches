@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.044] - 19 / 10 / 2024
+Fixing issues:
+- file movements.py
+- file chess.py
+
+## [0.043] - 18 / 10 / 2024
+correcciones para mejora de código de codeclimate
+
 ## [0.042] - 17 / 10 / 2024
 cambio para mejorar movimiento de pawn, movimientos habilitados
 
