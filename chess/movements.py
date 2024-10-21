@@ -64,15 +64,15 @@ class MovementRules:
     @staticmethod
     def is_valid_bishop_move(context):
         return MovementRules.is_valid_diagonal_move(context) and \
-            is_path_clear_diagonal(context)
+            MovementRules.is_valid_diagonal_path(context)
 
     @staticmethod
     def is_valid_queen_move(context):
         if MovementRules.is_valid_straight_line_move(context):
             is_horizontal = context.from_position.row == context.to_position.row
             return is_path_clear_linear(context, is_horizontal)
-        elif abs(context.from_position.row - context.to_position.row) == abs(context.from_position.col - context.to_position.col):
-            return is_path_clear_diagonal(context)
+        elif MovementRules.is_valid_diagonal_move(context):
+            return MovementRules.is_valid_diagonal_path(context)
         return False
 
     @staticmethod
@@ -125,3 +125,7 @@ class MovementRules:
     @staticmethod
     def is_valid_diagonal_move(context):
         return abs(context.from_position.row - context.to_position.row) == abs(context.from_position.col - context.to_position.col)
+    
+    @staticmethod
+    def is_valid_diagonal_path(context):
+        return is_path_clear_diagonal(context)
