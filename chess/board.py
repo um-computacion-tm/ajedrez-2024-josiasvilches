@@ -40,16 +40,16 @@ class Board:
             self.__positions__[1][i] = Pawn("Black", "Pawn")
             self.__positions__[6][i] = Pawn("White", "Pawn")
     
-    def get_piece(self, row, col):
-        return self.__positions__[row][col]
+    def get_piece(self, position):
+        return self.__positions__[position.row][position.col]
     
-    def move_piece(self, from_row, from_col, to_row, to_col):
-        piece = self.get_piece(from_row, from_col)
-        self.__positions__[to_row][to_col] = piece
-        self.__positions__[from_row][from_col] = None
+    def move_piece(self, from_position, to_position):
+        piece = self.get_piece(from_position)
+        self.__positions__[to_position.row][to_position.col] = piece
+        self.__positions__[from_position.row][from_position.col] = None
 
-    def set_position(self, row, col, piece):
-        self.__positions__[row][col] = piece
+    def set_position(self, position, piece):
+        self.__positions__[position.row][position.col] = piece
 
     def get_turn(self):
         return self.__turn__

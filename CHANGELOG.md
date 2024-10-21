@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.045] - 20 / 10 / 2024
+fixing issues (codeclimate), issues with excess of arguments fixed
+
 ## [0.044] - 19 / 10 / 2024
 Fixing issues (some functions were redistributed and moved to other file):
 - file movements.py
