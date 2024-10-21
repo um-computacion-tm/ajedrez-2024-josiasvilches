@@ -34,31 +34,34 @@ class MovementRules:
     def is_valid_directional_move(context):
         from_pos = context.from_position
         to_pos = context.to_position
-        
+
         if MovementRules.is_valid_straight_line_move(context):
-            is_horizontal = from_pos.row == to_pos.row
-            return is_path_clear_linear(context, is_horizontal)
+            return MovementRules.check_horizontal_or_vertical(context, from_pos, to_pos)
         elif MovementRules.is_valid_diagonal_move(context):
-            return is_path_clear_diagonal(context)
+            return MovementRules.is_valid_diagonal_move(context)
+        
         return False
+
+    @staticmethod
+    def check_horizontal_or_vertical(context, from_pos, to_pos):
+        """Verifica si el movimiento es válido y si el camino está despejado para movimientos en línea recta."""
+        is_horizontal = from_pos.row == to_pos.row
+        if is_horizontal:
+            return is_path_clear_linear(context, True)  # Movimiento horizontal
+        else:
+            return is_path_clear_linear(context, False)  # Movimiento vertical
+
     
     @staticmethod
     def is_valid_rook_move(context):
-        from_pos = context.from_position
-        to_pos = context.to_position
-        
-        if from_pos.row == to_pos.row:
-            # Movimiento horizontal
-            return is_path_clear_linear(context, is_horizontal=True)
-        elif from_pos.col == to_pos.col:
-            # Movimiento vertical
-            return is_path_clear_linear(context, is_horizontal=False)
-        return False
+        return MovementRules.is_valid_straight_line_move(context) and \
+            is_path_clear_linear(context, is_horizontal=(context.from_position.row == context.to_position.row))
+
 
     @staticmethod
     def is_valid_bishop_move(context):
         return MovementRules.is_valid_diagonal_move(context) and \
-            MovementRules.is_valid_diagonal_path(context)
+            is_path_clear_diagonal(context)
 
     @staticmethod
     def is_valid_queen_move(context):
