@@ -79,12 +79,37 @@ class Chess:
         '''
         piece = self.__board__.get_piece(from_position)
         target_piece = self.__board__.get_piece(to_position)
-        if piece:
-            if target_piece:
-                print(f"¡{piece.get_name()} en ({from_position.row}, {from_position.col}) capturó a {target_piece.get_name()} en ({to_position.row}, {to_position.col})!")
-                if target_piece.get_name() == "Rey":
-                    return "ReyEliminado"
+        
+        self.capture_piece(piece, target_piece, from_position, to_position)
         self.__board__.move_piece(from_position, to_position)
+        self.__board__.set_position(from_position, None)
+        print(f"Tablero actualizado: {piece} movido a ({to_position.row}, {to_position.col})")
+        
+        self.check_king_captured(to_position)
+
+    def capture_piece(self, piece, target_piece, from_position, to_position):
+        '''
+        The function capture_piece() handles the logic for capturing a piece.
+        Parameters:
+            piece: The piece to be moved.
+            target_piece: The piece to be captured.
+            from_position: The starting position of the piece.
+            to_position: The destination position of the piece.
+        '''
+        if piece and target_piece:
+            print(f"¡{piece} en ({from_position.row}, {from_position.col}) capturó a {target_piece} en ({to_position.row}, {to_position.col})!")
+
+    def check_king_captured(self, to_position):
+        '''
+        The function check_king_captured() checks if the king has been captured.
+        Parameters:
+            to_position: The position to which the piece was moved.
+        Raises:
+            KingisDeadException: If the king has been captured.
+        '''
+        if self.__board__.get_piece(to_position).get_name() == "King":
+            self.__ganador__ = self.__turn__
+            raise KingisDeadException()
 
     def display_board(self):
         '''

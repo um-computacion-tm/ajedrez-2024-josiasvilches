@@ -30,24 +30,16 @@ def get_user_input():
     Returns:
         from_row, from_col, to_row, to_col: The coordinates of the piece to move and its destination.
     '''
-    from_row = input("From row (0-7): ")
-    if from_row.lower() == "salir":
-        return None, None, None, None
-    
-    from_col = input("From col (a-h): ").lower()
-    if from_col.lower() == "salir":
-        return None, None, None, None
-    
-    to_row = input("To row (0-7): ")
-    if to_row.lower() == "salir":
-        return None, None, None, None
-    
-    to_col = input("To col (a-h): ").lower()
-    if to_col.lower() == "salir":
-        return None, None, None, None
-    
-    return from_row, from_col, to_row, to_col
+    inputs = ["From row (0-7): ", "From col (a-h): ", "To row (0-7): ", "To col (a-h): "]
+    results = []
 
+    for prompt in inputs:
+        user_input = input(prompt).lower()
+        if user_input == "salir":
+            return None, None, None, None
+        results.append(user_input)
+    
+    return results
 # Convert user input to board indices
 def convert_input_to_indices(from_row, from_col, to_row, to_col):
     '''
@@ -65,7 +57,7 @@ def convert_input_to_indices(from_row, from_col, to_row, to_col):
         to_row = int(to_row)
         to_col = ord(to_col) - ord('a')
     except ValueError:
-        raise InvalidInputError("Por favor ingresa números enteros para las filas y letras para las columnas.")
+        raise InvalidInputError()
     
     return from_row, from_col, to_row, to_col
 
