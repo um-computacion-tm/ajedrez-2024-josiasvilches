@@ -176,6 +176,14 @@ class Chess:
         if piece is not None:
             piece_counts[piece.get_color()] += 1
 
+    def check_game_over(self):
+        white_count, black_count = self.count_pieces()
+        if white_count == 0:
+            raise GameOverException("Black wins")
+        elif black_count == 0:
+            raise GameOverException("White wins")
+
+
     def alternate_turn(self):
         '''
         The function alternate_turn() switches the turn to the other player.

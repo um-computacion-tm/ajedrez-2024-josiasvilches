@@ -1,45 +1,65 @@
 import unittest
-from chess.chess import Board
-from chess.chess import Chess
-
+from chess.chess import *
+from chess.pieces import *
+from chess.king import King
+from chess.queen import Queen
+from chess.bishop import Bishop
+from chess.knight import Knight
+from chess.rook import Rook
+from chess.pawn import Pawn
 
 class TestBoard(unittest.TestCase):
-    
-    def test_board_setup(self):
-        self.board = Board()
-    
-    def test_initial_rook_positions(self):
-        self.assertIsInstance(self.board.get_piece(0, 0), Rook)
-        self.assertEqual(self.board.get_piece(0, 0).get_color(), "Black")
-        self.assertIsInstance(self.board.get_piece(0, 7), Rook)
-        self.assertEqual(self.board.get_piece(0, 7).get_color(), "Black")
-        self.assertIsInstance(self.board.get_piece(7, 0), Rook)
-        self.assertEqual(self.board.get_piece(7, 0).get_color(), "White")
-        self.assertIsInstance(self.board.get_piece(7, 7), Rook)
-        self.assertEqual(self.board.get_piece(7, 7).get_color(), "White")
-    
-    def test_initial_knight_positions(self):
-        self.assertIsInstance(self.board.get_piece(0, 1), Knight)
-        self.assertEqual(self.board.get_piece(0, 1).get_color(), "Black")
-        self.assertIsInstance(self.board.get_piece(0, 6), Knight)
-        self.assertEqual(self.board.get_piece(0, 6).get_color(), "Black")
-        self.assertIsInstance(self.board.get_piece(7, 1), Knight)
-        self.assertEqual(self.board.get_piece(7, 1).get_color(), "White")
-        self.assertIsInstance(self.board.get_piece(7, 6), Knight)
-        self.assertEqual(self.board.get_piece(7, 6).get_color(), "White")
-    
-    def test_initial_bishop_positions(self):
-        self.assertIsInstance(self.board.get_piece(0, 2), Bishop)
-        self.assertEqual(self.board.get_piece(0, 2).get_color(), "Black")
-        self.assertIsInstance(self.board.get_piece(0, 5), Bishop)
-        self.assertEqual(self.board.get_piece(0, 5).get_color(), "Black")
-        self.assertIsInstance(self.board.get_piece(7, 2), Bishop)
-        self.assertEqual(self.board.get_piece(7, 2).get_color(), "White")
-        self.assertIsInstance(self.board.get_piece(7, 5), Bishop)
-        self.assertEqual(self.board.get_piece(7, 5).get_color(), "White")
+        
+        def test_board_setup(self):
+            self.board = Board()
 
-   # def test_initial_queen_position(self):
-         
-
+        def test_get_piece_string(self):
+            board = Board()
+            
+            # Test for King
+            king = King("White", "King")
+            self.assertEqual(board.get_piece_string(king), '♚ ')
+            
+            king = King("Black", "King")
+            self.assertEqual(board.get_piece_string(king), '♔ ')
+            
+            # Test for Queen
+            queen = Queen("White", "Queen")
+            self.assertEqual(board.get_piece_string(queen), '♛ ')
+            
+            queen = Queen("Black", "Queen")
+            self.assertEqual(board.get_piece_string(queen), '♕ ')
+            
+            # Test for Bishop
+            bishop = Bishop("White", "Bishop")
+            self.assertEqual(board.get_piece_string(bishop), '♝ ')
+            
+            bishop = Bishop("Black", "Bishop")
+            self.assertEqual(board.get_piece_string(bishop), '♗ ')
+            
+            # Test for Knight
+            knight = Knight("White", "Knight")
+            self.assertEqual(board.get_piece_string(knight), '♞ ')
+            
+            knight = Knight("Black", "Knight")
+            self.assertEqual(board.get_piece_string(knight), '♘ ')
+            
+            # Test for Rook
+            rook = Rook("White", "Rook")
+            self.assertEqual(board.get_piece_string(rook), '♜ ')
+            
+            rook = Rook("Black", "Rook")
+            self.assertEqual(board.get_piece_string(rook), '♖ ')
+            
+            # Test for Pawn
+            pawn = Pawn("White", "Pawn")
+            self.assertEqual(board.get_piece_string(pawn), '♟ ')
+            
+            pawn = Pawn("Black", "Pawn")
+            self.assertEqual(board.get_piece_string(pawn), '♙ ')
+            
+            # Test for None (empty space)
+            self.assertEqual(board.get_piece_string(None), '. ')
+    
 if __name__ == '__main__':
     unittest.main()

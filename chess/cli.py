@@ -1,9 +1,5 @@
 from chess.chess import *
 from chess.exceptions import *
-from chess.board import *
-from chess.pieces import *
-from chess.movements import *
-from chess.utils import *
 
 # Main function
 def main():
@@ -71,12 +67,12 @@ def check_game_over(chess):
         GameOverException: If all pieces of one color have been eliminated.
     '''
     white_count, black_count = chess.count_pieces()
+    print(f"White pieces: {white_count}, Black pieces: {black_count}")
     if white_count == 0:
-        print("Las piezas blancas han sido eliminadas. ¡Las negras ganan!")
-        raise GameOverException()
+        raise GameOverException("Black wins")
     elif black_count == 0:
-        print("Las piezas negras han sido eliminadas. ¡Las blancas ganan!")
-        raise GameOverException()
+        raise GameOverException("White wins")
+
 
 # Handle user move
 def handle_user_move(chess):
@@ -89,7 +85,6 @@ def handle_user_move(chess):
     '''
     from_row, from_col, to_row, to_col = get_user_input()
     if from_row is None:
-        print("Game over.")
         return False
     
     from_row, from_col, to_row, to_col = convert_input_to_indices(from_row, from_col, to_row, to_col)
