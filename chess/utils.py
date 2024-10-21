@@ -15,6 +15,23 @@ class MoveContext:
         self.from_position = from_position
         self.to_position = to_position
 
+class LinearPathContext:
+    def __init__(self, board, from_fixed, from_var, to_var, step, is_horizontal):
+        self.board = board
+        self.from_fixed = from_fixed
+        self.from_var = from_var
+        self.to_var = to_var
+        self.step = step
+        self.is_horizontal = is_horizontal
+
+class DiagonalPathContext:
+    def __init__(self, board, from_position, to_position, row_step, col_step):
+        self.board = board
+        self.from_position = from_position
+        self.to_position = to_position
+        self.row_step = row_step
+        self.col_step = col_step
+
 def is_path_clear_linear(context, is_horizontal):
     """
     Verifica si el camino está despejado en una línea recta (horizontal o vertical).
@@ -22,7 +39,8 @@ def is_path_clear_linear(context, is_horizontal):
     board = context.game_context.board  # Acceder al tablero desde game_context
     from_fixed, from_var, to_var = get_fixed_and_variable_positions(context, is_horizontal)
     step = get_step(from_var, to_var)
-    return check_linear_path_clear(board, from_fixed, from_var, to_var, step, is_horizontal)
+    path_context = LinearPathContext(board, from_fixed, from_var, to_var, step, is_horizontal)
+    return check_linear_path_clear(path_context)
 
 def get_fixed_and_variable_positions(context, is_horizontal):
     """
@@ -39,13 +57,13 @@ def get_step(from_var, to_var):
     """
     return 1 if to_var > from_var else -1
 
-def check_linear_path_clear(board, from_fixed, from_var, to_var, step, is_horizontal):
+def check_linear_path_clear(path_context):
     """
     Verifica si el camino está despejado entre las posiciones variables.
     """
-    for var in range(from_var + step, to_var, step):
-        position = Position(from_fixed, var) if is_horizontal else Position(var, from_fixed)
-        if board.get_piece(position) is not None:
+    for var in range(path_context.from_var + path_context.step, path_context.to_var, path_context.step):
+        position = Position(path_context.from_fixed, var) if path_context.is_horizontal else Position(var, path_context.from_fixed)
+        if path_context.board.get_piece(position) is not None:
             return False
     return True
 
@@ -55,7 +73,8 @@ def is_path_clear_diagonal(context):
     """
     board = context.game_context.board  # Acceder al tablero desde game_context
     row_step, col_step = get_diagonal_steps(context)
-    return check_diagonal_path_clear(board, context.from_position, context.to_position, row_step, col_step)
+    path_context = DiagonalPathContext(board, context.from_position, context.to_position, row_step, col_step)
+    return check_diagonal_path_clear(path_context)
 
 def get_diagonal_steps(context):
     """
@@ -65,17 +84,17 @@ def get_diagonal_steps(context):
     col_step = 1 if context.to_position.col > context.from_position.col else -1
     return row_step, col_step
 
-def check_diagonal_path_clear(board, from_position, to_position, row_step, col_step):
+def check_diagonal_path_clear(path_context):
     """
     Verifica si el camino está despejado en una diagonal.
     """
-    row, col = from_position.row + row_step, from_position.col + col_step
-    while row != to_position.row and col != to_position.col:
+    row, col = path_context.from_position.row + path_context.row_step, path_context.from_position.col + path_context.col_step
+    while row != path_context.to_position.row and col != path_context.to_position.col:
         position = Position(row, col)
-        if board.get_piece(position) is not None:
+        if path_context.board.get_piece(position) is not None:
             return False
-        row += row_step
-        col += col_step
+        row += path_context.row_step
+        col += path_context.col_step
     return True
 
 @staticmethod
