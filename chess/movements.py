@@ -34,11 +34,14 @@ class MovementRules:
     def is_valid_directional_move(context):
         from_pos = context.from_position
         to_pos = context.to_position
+        piece_type = context.piece.get_name()
 
-        if MovementRules.is_valid_straight_line_move(context):
-            return MovementRules.check_horizontal_or_vertical(context, from_pos, to_pos)
-        elif MovementRules.is_valid_diagonal_move(context):
-            return MovementRules.is_valid_diagonal_move(context)
+        if piece_type == "Rook":
+            return MovementRules.is_valid_rook_move(context)
+        elif piece_type == "Bishop":
+            return MovementRules.is_valid_bishop_move(context)
+        elif piece_type == "Queen":
+            return MovementRules.is_valid_queen_move(context)
         
         return False
 
@@ -54,12 +57,14 @@ class MovementRules:
     
     @staticmethod
     def is_valid_rook_move(context):
+        # La torre solo puede moverse en líneas rectas (horizontal o vertical
         return MovementRules.is_valid_straight_line_move(context) and \
             is_path_clear_linear(context, is_horizontal=(context.from_position.row == context.to_position.row))
 
 
     @staticmethod
     def is_valid_bishop_move(context):
+        # El alfil solo se mueve en diagonales
         return MovementRules.is_valid_diagonal_move(context) and \
             is_path_clear_diagonal(context)
 
