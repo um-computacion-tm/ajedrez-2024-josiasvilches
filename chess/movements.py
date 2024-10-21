@@ -1,94 +1,128 @@
-from chess.pawn import Pawn
-from chess.rook import Rook
-from chess.knight import Knight
-from chess.bishop import Bishop
-from chess.queen import Queen
-from chess.king import King
 from chess.pieces import *
+from chess.utils import *
 
 class MovementRules:
 
-    # Direcciones generales
-    STRAIGHT_DIRECTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Vertical y horizontal
-    DIAGONAL_DIRECTIONS = [(1, 1), (1, -1), (-1, 1), (-1, -1)]  # Diagonales
+    # General directions
+    STRAIGHT_DIRECTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Vertical and horizontal
+    DIAGONAL_DIRECTIONS = [(1, 1), (1, -1), (-1, 1), (-1, -1)]  # Diagonal directions
     KNIGHT_MOVES = [(2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
 
     @staticmethod
-    def get_possible_moves(piece, board):
-        if isinstance(piece, Rook):
-            return MovementRules.__traverse_directions(piece, board, MovementRules.STRAIGHT_DIRECTIONS)
-        elif isinstance(piece, Bishop):
-            return MovementRules.__traverse_directions(piece, board, MovementRules.DIAGONAL_DIRECTIONS)
-        elif isinstance(piece, Queen):
-            return MovementRules.__traverse_directions(piece, board, 
-                MovementRules.STRAIGHT_DIRECTIONS + MovementRules.DIAGONAL_DIRECTIONS)
-        elif isinstance(piece, Knight):
-            return MovementRules.__single_step_moves(piece, board, MovementRules.KNIGHT_MOVES)
-        elif isinstance(piece, King):
-            return MovementRules.__single_step_moves(piece, board, 
-                MovementRules.STRAIGHT_DIRECTIONS + MovementRules.DIAGONAL_DIRECTIONS)
-        elif isinstance(piece, Pawn):
-            return MovementRules.__get_pawn_moves(piece, board)
+    def is_valid_move(context):
+        """This function checks if a move is valid based on the piece type."""
+        piece_type = context.piece.get_name()
+        rules = MovementRules
+
+        # Dictionary that associates pieces with their movement functions
+        movements = {
+            "Rook": rules.is_valid_rook_move,
+            "Knight": rules.is_valid_knight_move,
+            "Bishop": rules.is_valid_bishop_move,
+            "Queen": rules.is_valid_queen_move,
+            "King": rules.is_valid_king_move,
+            "Pawn": rules.is_valid_pawn_move
+        }
+
+        # Gets the corresponding validation function
+        movimiento_func = movements.get(piece_type)
+
+        if movimiento_func:
+            # Calls the corresponding function passing the context
+            return movimiento_func(context)
+        
+        return False
+
+    @staticmethod
+    def check_horizontal_or_vertical(context, from_pos, to_pos):
+        """This function checks if the move is valid and if the path is clear for straight-line movements."""
+        is_horizontal = from_pos.row == to_pos.row
+        if is_horizontal:
+            return is_path_clear_linear(context, True)  # Horizontal move
         else:
-            return []
-
-    # Movimiento en línea recta (usado por la torre, alfil y reina)
-    @staticmethod
-    def __traverse_directions(piece, board, directions):
-        possible_moves = []
-        row, col = piece.get_position()
-
-        for dr, dc in directions:
-            r, c = row + dr, col + dc
-            while board.is_within_bounds(r, c):
-                if board.is_empty(r, c):
-                    possible_moves.append((r, c))
-                elif board.is_opponent_piece(r, c, piece.get_color()):
-                    possible_moves.append((r, c))
-                    break  # No puede continuar más allá de una captura
-                else:
-                    break  # Bloqueado por una pieza aliada
-                r += dr
-                c += dc
-
-        return possible_moves
-
-    # Movimiento de un solo paso (usado por el rey y el caballo)
-    @staticmethod
-    def __single_step_moves(piece, board, directions):
-        possible_moves = []
-        row, col = piece.get_position()
-
-        for dr, dc in directions:
-            r, c = row + dr, col + dc
-            if board.is_within_bounds(r, c) and (board.is_empty(r, c) or board.is_opponent_piece(r, c, piece.get_color())):
-                possible_moves.append((r, c))
-
-        return possible_moves
-
-    # Reglas específicas para el peón
-    @staticmethod
-    def __get_pawn_moves(pawn, board):
-        possible_moves = []
-        direction = -1 if pawn.get_color() == "White" else 1
-        row, col = pawn.get_position()
-
-        MovementRules.__add_pawn_forward_moves(pawn, board, possible_moves, direction, row, col)
-
-        MovementRules.__add_pawn_diagonal_captures(pawn, board, possible_moves, direction, row, col)
-        return possible_moves
-    
-    @staticmethod
-    def __add_pawn_forward_moves(pawn, board, possible_moves, direction, row, col):
-        if board.is_empty(row + direction, col):
-            possible_moves.append((row + direction, col))
-            # Movimiento doble si está en la fila inicial
-            if (pawn.get_color() == "White" and row == 6) or (pawn.get_color() == "Black" and row == 1):
-                if board.is_empty(row + 2 * direction, col):
-                    possible_moves.append((row + 2 * direction, col))
+            return is_path_clear_linear(context, False)  # Vertical move
 
     @staticmethod
-    def __add_pawn_diagonal_captures(pawn, board, possible_moves, direction, row, col):
-        for dc in [-1, 1]:
-            if board.is_within_bounds(row + direction, col + dc) and board.is_opponent_piece(row + direction, col + dc, pawn.get_color()):
-                possible_moves.append((row + direction, col + dc))
+    def is_valid_rook_move(context):
+        """This function checks if the rook's movement is valid (straight lines only)."""
+        return MovementRules.is_valid_straight_line_move(context) and \
+            is_path_clear_linear(context, is_horizontal=(context.from_position.row == context.to_position.row))
+
+    @staticmethod
+    def is_valid_bishop_move(context):
+        """This function checks if the bishop's movement is valid (diagonal moves only)."""
+        return MovementRules.is_valid_diagonal_move(context) and \
+            is_path_clear_diagonal(context)
+
+    @staticmethod
+    def is_valid_queen_move(context):
+        """This function checks if the queen's movement is valid (combines rook and bishop moves)."""
+        if MovementRules.is_valid_straight_line_move(context):
+            is_horizontal = context.from_position.row == context.to_position.row
+            return is_path_clear_linear(context, is_horizontal)
+        elif MovementRules.is_valid_diagonal_move(context):
+            return MovementRules.is_valid_diagonal_path(context)
+        return False
+
+    @staticmethod
+    def is_valid_knight_move(context):
+        """This function checks if the knight's movement is valid (L-shape moves)."""
+        row_diff = abs(context.from_position.row - context.to_position.row)
+        col_diff = abs(context.from_position.col - context.to_position.col)
+        return (row_diff == 2 and col_diff == 1) or (row_diff == 1 and col_diff == 2)
+
+    @staticmethod
+    def is_valid_king_move(context):
+        """This function checks if the king's movement is valid (one square in any direction)."""
+        row_diff = abs(context.from_position.row - context.to_position.row)
+        col_diff = abs(context.from_position.col - context.to_position.col)
+        return row_diff <= 1 and col_diff <= 1
+
+    @staticmethod
+    def is_valid_pawn_move(context):
+        """This function checks if the pawn's movement is valid (forward moves and captures)."""
+        turn = context.piece.get_color()
+        direction = -1 if turn == 'White' else 1  # Whites move up, Blacks move down
+        start_row = 6 if turn == 'White' else 1  # Starting row for pawns
+
+        if MovementRules._is_valid_pawn_forward_move(context, direction, start_row):
+            return True
+
+        if MovementRules._is_valid_pawn_capture(context, direction):
+            return True
+
+        return False
+
+    @staticmethod
+    def _is_valid_pawn_forward_move(context, direction, start_row):
+        """This function checks if the pawn's forward movement is valid (single or double step)."""
+        if context.from_position.col == context.to_position.col:
+            if is_single_step_forward(context, direction):
+                return True
+            if is_double_step_forward(context, direction, start_row):
+                return True
+        return False
+
+    @staticmethod
+    def _is_valid_pawn_capture(context, direction):
+        """This function checks if the pawn's capture move is valid."""
+        if abs(context.from_position.col - context.to_position.col) == 1 and context.from_position.row + direction == context.to_position.row:
+            target_piece = context.game_context.board.get_piece(context.to_position)
+            if target_piece is not None and target_piece.get_color() != context.piece.get_color():
+                return True
+        return False
+
+    @staticmethod
+    def is_valid_straight_line_move(context):
+        """This function checks if the move is a straight line (horizontal or vertical)."""
+        return context.from_position.row == context.to_position.row or context.from_position.col == context.to_position.col
+
+    @staticmethod
+    def is_valid_diagonal_move(context):
+        """This function checks if the move is a diagonal move."""
+        return abs(context.from_position.row - context.to_position.row) == abs(context.from_position.col - context.to_position.col)
+
+    @staticmethod
+    def is_valid_diagonal_path(context):
+        """This function checks if the diagonal path is clear for movement."""
+        return is_path_clear_diagonal(context)

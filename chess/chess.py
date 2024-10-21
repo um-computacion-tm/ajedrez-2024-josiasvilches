@@ -1,159 +1,205 @@
 from chess.board import Board
-from chess.exceptions import InvalidMoveError
-
+from chess.exceptions import *
+from chess.movements import MovementRules
+from chess.utils import *
 
 class Chess:
     def __init__(self):
+        '''
+        The constructor initializes the chess game with a board, sets the turn to "White",
+        and initializes the piece counts for both white and black pieces.
+        '''
         self.__board__ = Board()
         self.__turn__ = "White"
-        self.__ganador__ = None
+        self.white_pieces = 16  # Cantidad inicial de piezas blancas
+        self.black_pieces = 16  # Cantidad inicial de piezas negras
+        self.__ganador__ = None  # Ganador del juego (None al inicio)
+    
+    def get_board(self):
+        return self.__board__
     
     def is_within_board_limits(self, row, col):
-        return 0 <= row < 8 and 0 <= col < 8
-    
-    def is_path_clear_horizontal(self, from_row, from_col, to_col):
-        step = 1 if to_col > from_col else -1
-        for col in range(from_col + step, to_col, step):
-            if self.__board__.get_piece(from_row, col) is not None:
-                return False
+        '''
+        The function is_within_board_limits() checks if the given row and column are within the board limits.
+        Parameters:
+            row: The row index.
+            col: The column index.
+        Returns:
+            True if the row and column are within the board limits.
+        Raises:
+            OutOfBoundsError: If the row or column is out of the board limits.
+        '''
+        if not (0 <= row < 8 and 0 <= col < 8):
+            raise OutOfBoundsError()
         return True
-    
-    def is_path_clear_vertical(self, from_row, from_col, to_row):
-        step = 1 if to_row > from_row else -1
-        for row in range(from_row + step, to_row, step):
-            if self.__board__.get_piece(row, from_col) is not None:
-                return False
-        return True
-       
-    def is_path_clear_diagonal(self, from_row, from_col, to_row, to_col):
-        row_step = 1 if to_row > from_row else -1
-        col_step = 1 if to_col > from_col else -1
-        current_row, current_col = from_row + row_step, from_col + col_step
-        while current_row != to_row and current_col != to_col:
-            if self.__board__.get_piece(current_row, current_col) is not None:
-                return False
-            current_row += row_step
-            current_col += col_step
-        return True
-    
-    def is_valid_straight_line_move(self, from_row, from_col, to_row, to_col):
-        return from_row == to_row or from_col == to_col
-    
-    def is_valid_diagonal_move(self, from_row, from_col, to_row, to_col):
-        return abs(from_row - to_row) == abs(from_col - to_col)
 
     def move(self, from_row, from_col, to_row, to_col):
+        '''
+        The function move() moves a piece from one position to another on the board.
+        Parameters:
+            from_row: The starting row index.
+            from_col: The starting column index.
+            to_row: The destination row index.
+            to_col: The destination column index.
+        '''
+        # Verificar que las coordenadas estén dentro de los límites del tablero
+        self.is_within_board_limits(from_row, from_col)
+        self.is_within_board_limits(to_row, to_col)
+        
+        from_position = Position(from_row, from_col)
+        to_position = Position(to_row, to_col)
+
         # Obtiene la pieza a mover
-        piece = self.__board__.get_piece(from_row, from_col)
+        piece = self.__board__.get_piece(from_position)
         if piece is None:
-            raise InvalidMoveError("No hay ninguna pieza en esa posición.")
+            raise PieceNotFoundError()
+        
         # Verificar que la pieza sea del color correcto (según el turno)
         if piece.get_color() != self.__turn__:
-            raise InvalidMoveError(f"Es el turno de {self.__turn__}, no de {piece.get_color__}.")
-        # Verificar si el movimiento es válido según las reglas de la pieza
-        if not self.is_valid_move(piece, from_row, from_col, to_row, to_col):
-            raise InvalidMoveError("Movimiento no válido para la pieza seleccionada.")
+            raise NotYourTurnError()
         
-        result = self.move_piece(from_row, from_col, to_row, to_col) # Realizar el movimiento y verificar si el rey fue capturado
+        # Crear el contexto del movimiento
+        game_context = GameContext(self.__board__, self.__turn__)
+        context = MoveContext(game_context, piece, from_position, to_position)
+        
+        # Verificar si el movimiento es válido según las reglas de la pieza
+        if not MovementRules.is_valid_move(context):
+            raise InvalidMoveError()
+        
+        result = self.move_piece(from_position, to_position) # Realizar el movimiento y verificar si el rey fue capturado
         if result == "ReyEliminado":
-            return "ReyEliminado"  # Enviar mensaje al main.py para finalizar el juego
+            raise KingisDeadException()  
         
         # Cambiar el turno si el movimiento es exitoso
         self.alternate_turn()
-        return "Valido"  # Movimiento realizado correctamente
 
-    def is_valid_move(self, piece, from_row, from_col, to_row, to_col):
-        piece_type = piece.get_name()
-        # color = piece.get_color()
-        if piece_type == "Rook":
-            return self.is_valid_straight_line_move(from_row, from_col, to_row, to_col) and \
-                     (self.is_path_clear_horizontal(from_row, from_col, to_col) or \
-                      self.is_path_clear_vertical(from_row, from_col, to_row))
+    def move_piece(self, from_position, to_position):
+        '''
+        The function move_piece() moves a piece from one position to another on the board.
+        Parameters:
+            from_position: The starting position of the piece.
+            to_position: The destination position of the piece.
+        '''
+        piece = self.__board__.get_piece(from_position)
+        target_piece = self.__board__.get_piece(to_position)
         
-        elif piece_type == "Bishop":
-            return self.is_valid_diagonal_move(from_row, from_col, to_row, to_col) and \
-                        self.is_path_clear_diagonal(from_row, from_col, to_row, to_col)
-        elif piece_type == "Knight":
-            return self.is_valid_knight_move(from_row, from_col, to_row, to_col)
-        elif piece_type == "Queen":
-            return (self.is_valid_straight_line_move(from_row, from_col, to_row, to_col) and \
-                    (self.is_path_clear_horizontal(from_row, from_col, to_col) or \
-                    self.is_path_clear_vertical(from_row, from_col, to_row))) or \
-                    (self.is_valid_diagonal_move(from_row, from_col, to_row, to_col) and \
-                    self.is_path_clear_diagonal(from_row, from_col, to_row, to_col))
-        elif piece_type == "King":
-            return self.is_valid_king_move(from_row, from_col, to_row, to_col)
-        elif piece_type == "Pawn":
-            return self.is_valid_pawn_move(piece, from_row, from_col, to_row, to_col)
-        return False  # Si no se reconoce la pieza, el movimiento es inválido
-
-    def is_valid_knight_move(self, from_row, from_col, to_row, to_col):
-        row_diff = abs(from_row - to_row)
-        col_diff = abs(from_col - to_col)
-        return (row_diff == 2 and col_diff == 1) or (row_diff == 1 and col_diff == 2)
-
-    def is_valid_king_move(self, from_row, from_col, to_row, to_col):
-        return max(abs(from_row - to_row), abs(from_col - to_col)) == 1
-    
-    def is_valid_pawn_move(self, piece, from_row, from_col, to_row, to_col):
-        print(f"Verificando movimiento de peón: {piece}, de ({from_row}, {from_col}) a ({to_row}, {to_col})")
-    
-        turn = piece.get_color()
-        direction = -1 if turn == 'White' else 1  # Blancos se mueven hacia arriba, Negros hacia abajo
-        start_row = 6 if turn == 'White' else 1  # Fila de inicio de peones
-    
-        if self._is_valid_pawn_forward_move(from_row, from_col, to_row, to_col, direction, start_row):
-            print(f"Movimiento hacia adelante válido para el peón de {turn}")
-            return True
-    
-        if self._is_valid_pawn_capture(from_row, from_col, to_row, to_col, direction):
-            print(f"Captura diagonal válida para el peón de {turn}")
-            return True
-    
-        return False
-    
-    def _is_valid_pawn_forward_move(self, from_row, from_col, to_row, to_col, direction, start_row):
-        if from_col == to_col:
-            # Movimiento de un paso
-            if from_row + direction == to_row:
-                if self.__board__.get_piece(to_row, to_col) is None:
-                    return True
-    
-            # Movimiento de dos pasos desde la posición inicial
-            if from_row == start_row and from_row + 2 * direction == to_row:
-                if self.__board__.get_piece(to_row, to_col) is None and self.__board__.get_piece(from_row + direction, from_col) is None:
-                    return True
-    
-        return False
-    
-    def _is_valid_pawn_capture(self, from_row, from_col, to_row, to_col, direction):
-        if abs(from_col - to_col) == 1 and from_row + direction == to_row:
-            target_piece = self.__board__.get_piece(to_row, to_col)
-            if target_piece is not None and target_piece.get_color() != self.__turn__:
-                return True
-    
-        return False
-
-    def move_piece(self, from_row, from_col, to_row, to_col):
-        piece = self.__board__.get_piece(from_row, from_col)
-        if piece:
-            self.__board__.move_piece(from_row, from_col, to_row, to_col)
-            self.__board__.set_position(from_row, from_col, None)
-            print(f"Tablero actualizado: {piece} movido a ({to_row}, {to_col})")
+        self.capture_piece(piece, target_piece, from_position, to_position)
+        self.__board__.move_piece(from_position, to_position)
+        self.__board__.set_position(from_position, None)
+        print(f"Tablero actualizado: {piece} movido a ({to_position.row}, {to_position.col})")
         
-        if self.__board__.get_piece(to_row, to_col).get_name() == "King":
+        self.check_king_captured(to_position)
+
+    def capture_piece(self, piece, target_piece, from_position, to_position):
+        '''
+        The function capture_piece() handles the logic for capturing a piece.
+        Parameters:
+            piece: The piece to be moved.
+            target_piece: The piece to be captured.
+            from_position: The starting position of the piece.
+            to_position: The destination position of the piece.
+        '''
+        if piece and target_piece:
+            print(f"¡{piece} en ({from_position.row}, {from_position.col}) capturó a {target_piece} en ({to_position.row}, {to_position.col})!")
+
+    def check_king_captured(self, to_position):
+        '''
+        The function check_king_captured() checks if the king has been captured.
+        Parameters:
+            to_position: The position to which the piece was moved.
+        Raises:
+            KingisDeadException: If the king has been captured.
+        '''
+        target_piece = self.__board__.get_piece(to_position)
+        if target_piece and target_piece.get_name() == "King":
             self.__ganador__ = self.__turn__
-            return "ReyEliminado"
-        
+            raise KingisDeadException()
+        return "MovimientoExitoso"
+
+    def display_board(self):
+        '''
+        The function display_board() displays the current state of the board.
+        '''
+        self.__board__.display_board()
+
+    def get_turn(self):
+        '''
+        The function get_turn() returns the current turn.
+        Returns:
+            The current turn ("White" or "Black").
+        '''
+        return self.__turn__
+
+    def count_pieces(self):
+        '''
+        The function count_pieces() counts the number of pieces for each color.
+        Returns:
+            A tuple containing the number of white pieces and black pieces.
+        '''
+        piece_counts = self.initialize_piece_counts()
+        self.update_piece_counts(piece_counts)
+        self.white_pieces = piece_counts["White"]
+        self.black_pieces = piece_counts["Black"]
+        return self.white_pieces, self.black_pieces
+
+    def initialize_piece_counts(self):
+        '''
+        The function initialize_piece_counts() initializes the piece counts for both colors.
+        Returns:
+            A dictionary with the initial piece counts for both colors.
+        '''
+        return {"White": 0, "Black": 0}
+
+    def update_piece_counts(self, piece_counts):
+        '''
+        The function update_piece_counts() updates the piece counts based on the current state of the board.
+        Parameters:
+            piece_counts: A dictionary with the current piece counts for both colors.
+        '''
+        for row in range(8):
+            self.update_piece_counts_for_row(row, piece_counts)
+
+    def update_piece_counts_for_row(self, row, piece_counts):
+        '''
+        The function update_piece_counts_for_row() updates the piece counts for a specific row.
+        Parameters:
+            row: The row index.
+            piece_counts: A dictionary with the current piece counts for both colors.
+        '''
+        for col in range(8):
+            self.update_piece_count_for_position(row, col, piece_counts)
+
+    def update_piece_count_for_position(self, row, col, piece_counts):
+        '''
+        The function update_piece_count_for_position() updates the piece count for a specific position.
+        Parameters:
+            row: The row index.
+            col: The column index.
+            piece_counts: A dictionary with the current piece counts for both colors.
+        '''
+        piece = self.__board__.get_piece(Position(row, col))
+        if piece is not None:
+            piece_counts[piece.get_color()] += 1
+
+    def check_game_over(self):
+        white_count, black_count = self.count_pieces()
+        if white_count == 0:
+            raise GameOverException("Black wins")
+        elif black_count == 0:
+            raise GameOverException("White wins")
+
+
     def alternate_turn(self):
+        '''
+        The function alternate_turn() switches the turn to the other player.
+        '''
         self.__turn__ = "White" if self.__turn__ == "Black" else "Black"
         print(f"Es el turno de {self.__turn__}")
 
-    def get_turn(self):
-        return self.__turn__
-
-    def display_board(self):
-        self.__board__.display_board()
-
     def get_ganador(self):
+        '''
+        The function get_ganador() returns the winner of the game.
+        Returns:
+            The winner of the game.
+        '''
         return self.__ganador__
