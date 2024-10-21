@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.046] - 2024-10-21
+
+### Fixed
+
+- Raising Exceptions with `movements.py` and `cli.py`
+
 
 
 ## [0.045] - 2024-10-20

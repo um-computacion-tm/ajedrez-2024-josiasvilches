@@ -112,9 +112,10 @@ class MovementRules:
 
     @staticmethod
     def _is_valid_pawn_capture(context, direction):
+        # Verifica si el movimiento de captura del peón es válido.
         if abs(context.from_position.col - context.to_position.col) == 1 and context.from_position.row + direction == context.to_position.row:
             target_piece = context.game_context.board.get_piece(context.to_position)
-            if target_piece is not None and target_piece.get_color() != context.game_context.board.get_turn():
+            if target_piece is not None and target_piece.get_color() != context.piece.get_color():
                 return True
         return False
 

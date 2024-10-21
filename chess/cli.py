@@ -1,12 +1,13 @@
 from chess.chess import *
-from chess.exceptions import InvalidMoveError
+from chess.exceptions import *
 from chess.board import *
 from chess.pieces import *
 from chess.movements import *
 
-
-
 def main():
+    '''
+    The function main() is the entry point of the program.
+    '''
     chess = Chess()
 
     print("Bienvenido al Ajedrez. Para salir, ingresa 'salir' en cualquier momento. \nBlancos empiezan, es decir los que están en mayúsculas.")
@@ -35,20 +36,34 @@ def play(chess):
         if to_col.lower() == "salir":
             return False
         
-        # Convert the row and column inputs to the board indices
-        from_row = int(from_row)  # Rows are input as 1-8, so we subtract 1
-        from_col = ord(from_col) - ord('a')  # Convert 'a'-'h' to 0-7 using ASCII values
-        to_row = int(to_row)  # Rows are input as 1-8, so we subtract 1
-        to_col = ord(to_col) - ord('a')  # Convert 'a'-'h' to 0-7 using ASCII values
+        try:
+            # Convert the row and column inputs to the board indices
+            from_row = int(from_row)  # Rows are input as 1-8, so we subtract 1
+            from_col = ord(from_col) - ord('a')  # Convert 'a'-'h' to 0-7 using ASCII values
+            to_row = int(to_row)  # Rows are input as 1-8, so we subtract 1
+            to_col = ord(to_col) - ord('a')  # Convert 'a'-'h' to 0-7 using ASCII values
+        except ValueError:
+            raise InvalidInputError("Por favor ingresa números enteros para las filas y letras para las columnas.")
 
         # Move piece
         chess.move(from_row, from_col, to_row, to_col)
 
-    except ValueError:
-        print("Entrada no válida. Por favor ingresa números enteros para las filas y letras para las columnas.")
+        white_count, black_count = chess.count_pieces()
+        if white_count == 0:
+            print("Las piezas blancas han sido eliminadas. ¡Las negras ganan!")
+            raise GameOverException("Juego terminado.")
+        elif black_count == 0:
+            print("Las piezas negras han sido eliminadas. ¡Las blancas ganan!")
+            raise GameOverException("Juego terminado.")
+
+    except InvalidInputError as e:
+        print(f"Error de entrada: {e}")
     
     except InvalidMoveError as e:
         print(f"Error: {e}")
+    
+    except ChessError as e:
+        print(f"Error de ajedrez: {e}")
     
     except Exception as e:
         print(f"Error inesperado: {e}")
