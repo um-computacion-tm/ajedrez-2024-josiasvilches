@@ -9,15 +9,19 @@ class PathDetails:
         self.var = var
         self.step = step
 
-class BoardContext:
-    def __init__(self, board, path_details, is_horizontal):
+class ContextBase:
+    def __init__(self, board):
         self.board = board
+
+class BoardContext(ContextBase):
+    def __init__(self, board, path_details, is_horizontal):
+        super().__init__(board)
         self.path_details = path_details
         self.is_horizontal = is_horizontal
 
-class DiagonalContext:
+class DiagonalContext(ContextBase):
     def __init__(self, board, from_position, to_position, steps):
-        self.board = board
+        super().__init__(board)
         self.from_position = from_position
         self.to_position = to_position
         self.steps = steps

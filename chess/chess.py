@@ -152,10 +152,29 @@ class Chess:
             piece_counts: A dictionary with the current piece counts for both colors.
         '''
         for row in range(8):
-            for col in range(8):
-                piece = self.__board__.get_piece(Position(row, col))
-                if piece is not None:
-                    piece_counts[piece.get_color()] += 1
+            self.update_piece_counts_for_row(row, piece_counts)
+
+    def update_piece_counts_for_row(self, row, piece_counts):
+        '''
+        The function update_piece_counts_for_row() updates the piece counts for a specific row.
+        Parameters:
+            row: The row index.
+            piece_counts: A dictionary with the current piece counts for both colors.
+        '''
+        for col in range(8):
+            self.update_piece_count_for_position(row, col, piece_counts)
+
+    def update_piece_count_for_position(self, row, col, piece_counts):
+        '''
+        The function update_piece_count_for_position() updates the piece count for a specific position.
+        Parameters:
+            row: The row index.
+            col: The column index.
+            piece_counts: A dictionary with the current piece counts for both colors.
+        '''
+        piece = self.__board__.get_piece(Position(row, col))
+        if piece is not None:
+            piece_counts[piece.get_color()] += 1
 
     def alternate_turn(self):
         '''
