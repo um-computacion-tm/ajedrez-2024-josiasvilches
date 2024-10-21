@@ -29,7 +29,12 @@ class NotYourTurnError(ChessError):
     def __init__(self, message="No es tu turno"):
         super().__init__(message)
 
-class KingisDeadError(ChessError):
+class KingisDeadException(ChessError):
     """Raised when the king is captured"""
     def __init__(self, message="El rey ha sido capturado"):
+        super().__init__(message)
+
+class OutOfBoundsError(ChessError):
+    """Raised when a piece is moved out of the board"""
+    def __init__(self, message="Las coordenadas ingresadas están fuera de los límites del tablero"):
         super().__init__(message)

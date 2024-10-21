@@ -8,6 +8,10 @@
 - Cognitive Complexity in `utils.py`
 - `Dockerfile` adjusted to the project
 
+### Changed
+
+- comments added on main files
+
 
 
 ## [0.045] - 2024-10-20
