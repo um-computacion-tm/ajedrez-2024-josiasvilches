@@ -22,7 +22,7 @@ def is_path_clear_linear(context, is_horizontal):
     board = context.game_context.board  # Acceder al tablero desde game_context
     from_fixed, from_var, to_var = get_fixed_and_variable_positions(context, is_horizontal)
     step = get_step(from_var, to_var)
-    return check_path_clear(board, from_fixed, from_var, to_var, step, is_horizontal)
+    return check_linear_path_clear(board, from_fixed, from_var, to_var, step, is_horizontal)
 
 def get_fixed_and_variable_positions(context, is_horizontal):
     """
@@ -39,7 +39,7 @@ def get_step(from_var, to_var):
     """
     return 1 if to_var > from_var else -1
 
-def check_path_clear(board, from_fixed, from_var, to_var, step, is_horizontal):
+def check_linear_path_clear(board, from_fixed, from_var, to_var, step, is_horizontal):
     """
     Verifica si el camino está despejado entre las posiciones variables.
     """
