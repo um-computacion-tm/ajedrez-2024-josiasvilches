@@ -15,6 +15,9 @@ class Chess:
         self.black_pieces = 16  # Cantidad inicial de piezas negras
         self.__ganador__ = None  # Ganador del juego (None al inicio)
     
+    def get_board(self):
+        return self.__board__
+    
     def is_within_board_limits(self, row, col):
         '''
         The function is_within_board_limits() checks if the given row and column are within the board limits.
@@ -107,9 +110,11 @@ class Chess:
         Raises:
             KingisDeadException: If the king has been captured.
         '''
-        if self.__board__.get_piece(to_position).get_name() == "King":
+        target_piece = self.__board__.get_piece(to_position)
+        if target_piece and target_piece.get_name() == "King":
             self.__ganador__ = self.__turn__
             raise KingisDeadException()
+        return "MovimientoExitoso"
 
     def display_board(self):
         '''

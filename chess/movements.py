@@ -11,31 +11,25 @@ class MovementRules:
     @staticmethod
     def is_valid_move(context):
         piece_type = context.piece.get_name()
+        rules = MovementRules
 
-        # Determina si es un movimiento direccional o específico
-        if piece_type in ["Rook", "Bishop", "Queen"]:
-            return MovementRules.is_valid_directional_piece_move(context, piece_type)
-        else:
-            return MovementRules.is_valid_specific_piece_move(context, piece_type)
+        # Diccionario que asocia piezas con sus funciones de movimiento
+        movements = {
+            "Rook": rules.is_valid_rook_move,
+            "Knight": rules.is_valid_knight_move,
+            "Bishop": rules.is_valid_bishop_move,
+            "Queen": rules.is_valid_queen_move,
+            "King": rules.is_valid_king_move,
+            "Pawn": rules.is_valid_pawn_move
+        }
 
-    @staticmethod
-    def is_valid_directional_piece_move(context, piece_type):
-        if piece_type == "Rook":
-            return MovementRules.is_valid_rook_move(context)
-        elif piece_type == "Bishop":
-            return MovementRules.is_valid_bishop_move(context)
-        elif piece_type == "Queen":
-            return MovementRules.is_valid_queen_move(context)
-        return False
+        # Obtiene la función de validación de movimiento correspondiente
+        movimiento_func = movements.get(piece_type)
 
-    @staticmethod
-    def is_valid_specific_piece_move(context, piece_type):
-        if piece_type == "Knight":
-            return MovementRules.is_valid_knight_move(context)
-        elif piece_type == "King":
-            return MovementRules.is_valid_king_move(context)
-        elif piece_type == "Pawn":
-            return MovementRules.is_valid_pawn_move(context)
+        if movimiento_func:
+            # Llama a la función correspondiente pasando el contexto
+            return movimiento_func(context)
+        
         return False
 
 

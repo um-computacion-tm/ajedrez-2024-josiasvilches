@@ -15,7 +15,7 @@ class TestBishop(unittest.TestCase):
 
     def test_bishop_diagonal_move(self):
         from_position = Position(7, 2)
-        to_position = Position(5, 4)
+        to_position = Position(6, 3)
         context = self.create_move_context(self.bishop, from_position, to_position)
         self.assertTrue(MovementRules.is_valid_move(context))
 
