@@ -1,3 +1,4 @@
 nosesube.txt
 __pycache__/
 venv/
+.coverage
