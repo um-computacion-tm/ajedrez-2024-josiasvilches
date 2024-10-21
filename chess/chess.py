@@ -3,7 +3,6 @@ from chess.exceptions import *
 from chess.movements import MovementRules
 from chess.utils import *
 
-
 class Chess:
     def __init__(self):
         '''
@@ -14,7 +13,7 @@ class Chess:
         self.__turn__ = "White"
         self.white_pieces = 16  # Cantidad inicial de piezas blancas
         self.black_pieces = 16  # Cantidad inicial de piezas negras
-        self.__ganador__ = None
+        self.__ganador__ = None  # Ganador del juego (None al inicio)
     
     def is_within_board_limits(self, row, col):
         '''
@@ -40,8 +39,10 @@ class Chess:
             to_row: The destination row index.
             to_col: The destination column index.
         '''
+        # Verificar que las coordenadas estén dentro de los límites del tablero
         self.is_within_board_limits(from_row, from_col)
         self.is_within_board_limits(to_row, to_col)
+        
         from_position = Position(from_row, from_col)
         to_position = Position(to_row, to_col)
 
@@ -81,38 +82,15 @@ class Chess:
         if piece:
             if target_piece:
                 print(f"¡{piece.get_name()} en ({from_position.row}, {from_position.col}) capturó a {target_piece.get_name()} en ({to_position.row}, {to_position.col})!")
+                if target_piece.get_name() == "Rey":
+                    return "ReyEliminado"
+        self.__board__.move_piece(from_position, to_position)
 
-            self.__board__.move_piece(from_position, to_position)
-            self.__board__.set_position(from_position, None)
-            print(f"Tablero actualizado: {piece} movido a ({to_position.row}, {to_position.col})")
-        
-        if self.__board__.get_piece(to_position).get_name() == "King":
-            self.__ganador__ = self.__turn__
-            raise KingisDeadException()
-    
-    def count_pieces(self):
+    def display_board(self):
         '''
-        The function count_pieces() counts the number of pieces for each color.
-        Returns:
-            A tuple containing the number of white pieces and black pieces.
+        The function display_board() displays the current state of the board.
         '''
-        piece_counts = {"White": 0, "Black": 0}
-        for row in self.__board__.__positions__:
-            for piece in row:
-                if piece is not None:
-                    piece_counts[piece.get_color()] += 1
-        
-        self.white_pieces = piece_counts["White"]
-        self.black_pieces = piece_counts["Black"]
-        
-        return self.white_pieces, self.black_pieces
-        
-    def alternate_turn(self):
-        '''
-        The function alternate_turn() switches the turn to the other player.
-        '''
-        self.__turn__ = "White" if self.__turn__ == "Black" else "Black"
-        print(f"Es el turno de {self.__turn__}")
+        self.__board__.display_board()
 
     def get_turn(self):
         '''
@@ -122,11 +100,44 @@ class Chess:
         '''
         return self.__turn__
 
-    def display_board(self):
+    def count_pieces(self):
         '''
-        The function display_board() displays the current state of the board.
+        The function count_pieces() counts the number of pieces for each color.
+        Returns:
+            A tuple containing the number of white pieces and black pieces.
         '''
-        self.__board__.display_board()
+        piece_counts = self.initialize_piece_counts()
+        self.update_piece_counts(piece_counts)
+        self.white_pieces = piece_counts["White"]
+        self.black_pieces = piece_counts["Black"]
+        return self.white_pieces, self.black_pieces
+
+    def initialize_piece_counts(self):
+        '''
+        The function initialize_piece_counts() initializes the piece counts for both colors.
+        Returns:
+            A dictionary with the initial piece counts for both colors.
+        '''
+        return {"White": 0, "Black": 0}
+
+    def update_piece_counts(self, piece_counts):
+        '''
+        The function update_piece_counts() updates the piece counts based on the current state of the board.
+        Parameters:
+            piece_counts: A dictionary with the current piece counts for both colors.
+        '''
+        for row in range(8):
+            for col in range(8):
+                piece = self.__board__.get_piece(Position(row, col))
+                if piece is not None:
+                    piece_counts[piece.get_color()] += 1
+
+    def alternate_turn(self):
+        '''
+        The function alternate_turn() switches the turn to the other player.
+        '''
+        self.__turn__ = "White" if self.__turn__ == "Black" else "Black"
+        print(f"Es el turno de {self.__turn__}")
 
     def get_ganador(self):
         '''

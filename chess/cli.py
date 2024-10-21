@@ -89,6 +89,28 @@ def check_game_over(chess):
         print("Las piezas negras han sido eliminadas. ¡Las blancas ganan!")
         raise GameOverException()
 
+# Handle user move
+def handle_user_move(chess):
+    '''
+    The function handle_user_move() handles the user input and moves the piece on the board.
+    Parameters:
+        chess: The chess game instance.
+    Returns:
+        False if the user wants to exit the game, True otherwise.
+    '''
+    from_row, from_col, to_row, to_col = get_user_input()
+    if from_row is None:
+        print("Game over.")
+        return False
+    
+    from_row, from_col, to_row, to_col = convert_input_to_indices(from_row, from_col, to_row, to_col)
+    
+    chess.move(from_row, from_col, to_row, to_col)
+    
+    check_game_over(chess)
+    
+    return True
+
 # Chess game
 def play(chess):
     '''
@@ -102,17 +124,7 @@ def play(chess):
             chess.display_board()
             print("Turn:", chess.get_turn())
             
-            from_row, from_col, to_row, to_col = get_user_input()
-            if from_row is None:
-                print("Game over.")
-                game_active = False
-                continue
-            
-            from_row, from_col, to_row, to_col = convert_input_to_indices(from_row, from_col, to_row, to_col)
-            
-            chess.move(from_row, from_col, to_row, to_col)
-            
-            check_game_over(chess)
+            game_active = handle_user_move(chess)
         
         except InvalidInputError as e:
             print(f"Error de entrada: {e}")
