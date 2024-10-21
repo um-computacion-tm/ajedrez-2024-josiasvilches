@@ -18,10 +18,7 @@ def main():
         try:
             if not play(chess):
                 break
-        except GameOverException as e:
-            print(str(e))
-            break
-        except KingisDeadException as e:
+        except (GameOverException, KingisDeadException) as e:
             print(str(e))
             break
 
@@ -126,14 +123,8 @@ def play(chess):
             
             game_active = handle_user_move(chess)
         
-        except InvalidInputError as e:
-            print(f"Error de entrada: {e}")
-        except InvalidMoveError as e:
+        except (InvalidInputError, InvalidMoveError, OutOfBoundsError, NotYourTurnError) as e:
             print(f"Error: {e}")
-        except OutOfBoundsError as e:
-            print(f"Error de límites: {e}")
-        except NotYourTurnError as e:
-            print(f"Error de jugador: {e}")
         except Exception as e:
             print(f"Error inesperado: {e}")
 
