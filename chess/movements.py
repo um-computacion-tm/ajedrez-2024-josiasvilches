@@ -12,16 +12,24 @@ class MovementRules:
     def is_valid_move(context):
         piece_type = context.piece.get_name()
 
-        # Para piezas que tienen movimientos en línea recta o diagonal
+        # Determina si es un movimiento direccional o específico
         if piece_type in ["Rook", "Bishop", "Queen"]:
-            return MovementRules.is_valid_directional_move(context)
+            return MovementRules.is_valid_directional_piece_move(context, piece_type)
+        else:
+            return MovementRules.is_valid_specific_piece_move(context, piece_type)
 
-        # Para otras piezas con movimientos específicos
-        return MovementRules.is_valid_specific_piece_move(context)
-    
     @staticmethod
-    def is_valid_specific_piece_move(context):
-        piece_type = context.piece.get_name()
+    def is_valid_directional_piece_move(context, piece_type):
+        if piece_type == "Rook":
+            return MovementRules.is_valid_rook_move(context)
+        elif piece_type == "Bishop":
+            return MovementRules.is_valid_bishop_move(context)
+        elif piece_type == "Queen":
+            return MovementRules.is_valid_queen_move(context)
+        return False
+
+    @staticmethod
+    def is_valid_specific_piece_move(context, piece_type):
         if piece_type == "Knight":
             return MovementRules.is_valid_knight_move(context)
         elif piece_type == "King":
@@ -29,21 +37,7 @@ class MovementRules:
         elif piece_type == "Pawn":
             return MovementRules.is_valid_pawn_move(context)
         return False
-    
-    @staticmethod
-    def is_valid_directional_move(context):
-        from_pos = context.from_position
-        to_pos = context.to_position
-        piece_type = context.piece.get_name()
 
-        if piece_type == "Rook":
-            return MovementRules.is_valid_rook_move(context)
-        elif piece_type == "Bishop":
-            return MovementRules.is_valid_bishop_move(context)
-        elif piece_type == "Queen":
-            return MovementRules.is_valid_queen_move(context)
-        
-        return False
 
     @staticmethod
     def check_horizontal_or_vertical(context, from_pos, to_pos):
