@@ -4,10 +4,12 @@
 
 ### Fixed
 
-- Raising Exceptions with `movements.py` and `cli.py`
-- Cognitive Complexity in `utils.py`
-- `Dockerfile` adjusted to the project
-- Tests now can be executed
+- Improved exception handling in `movements.py` and `cli.py`, ensuring that InvalidMoveError, OutOfBoundsError, and KingisDeadException are raised appropriately.
+- Reduced cognitive complexity in `utils.py` to enhance readability and maintainability.
+- Updated `Dockerfile` to better align with project requirements and streamline setup.
+- All tests can now be executed successfully, ensuring code reliability.
+- Final version released: the code is fully functional, and its features can be verified through both automated tests and interactive gameplay.
+
 
 ### Changed
 
