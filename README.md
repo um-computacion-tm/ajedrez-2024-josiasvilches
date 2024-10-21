@@ -1,6 +1,9 @@
 # Ajedrez Josias Vilches
+Nombre: Josías Vilches
+Legajo: 63.050
 
-Proyecto de Ajedrez de Josías Vilches
+# Proyecto de Ajedrez
+
 
 Este es un proyecto de ajedrez desarrollado en Python. El objetivo es implementar un juego funcional que siga las reglas tradicionales del ajedrez, permitiendo jugar tanto en modo local como con la opción de prueba a través de Docker.
 
