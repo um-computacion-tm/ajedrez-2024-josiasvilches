@@ -5,6 +5,7 @@
 ### Fixed
 
 - Raising Exceptions with `movements.py` and `cli.py`
+- Cognitive Complexity in `utils.py`
 
 
 
